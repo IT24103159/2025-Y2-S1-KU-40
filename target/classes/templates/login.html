@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+<h1>UniHelpDesk Login</h1>
+<form th:action="@{/login}" method="post">
+    <div>
+        <label for="universityId">University ID:</label>
+        <input type="text" id="universityId" name="universityId" required>
+    </div>
+    <br>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+    <br>
+    <button type="submit">Login</button>
+</form>
+<p th:if="${param.error}" style="color: red;">Invalid University ID or Password!</p>
+</body>
+</html>
