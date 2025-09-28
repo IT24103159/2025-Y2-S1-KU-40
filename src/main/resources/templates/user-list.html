@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User List</title>
+    <style>
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #dddddd; text-align: left; padding: 8px; }
+        th { background-color: #f2f2f2; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        th a { text-decoration: none; color: black; }
+    </style>
+</head>
+<body>
+<h1>System User List</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>University ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>
+            <a th:href="@{/admin/users/list(sortBy='role')}">Role</a>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.universityId}"></td>
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.email}"></td>
+        <td th:text="${user.specificRole}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<br>
+<a th:href="@{/admin/users}"><button>Back to User Management</button></a>
+</body>
+</html>

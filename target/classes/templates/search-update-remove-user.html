@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage User</title>
+</head>
+<body>
+<h1>Search, Update, or Remove User</h1>
+
+<div th:if="${successMessage}" style="color: green;" th:text="${successMessage}"></div>
+<div th:if="${errorMessage}" style="color: red;" th:text="${errorMessage}"></div>
+
+<form th:action="@{/admin/users/search}" method="get">
+    <label for="universityId">University ID:</label>
+    <input type="text" id="universityId" name="universityId" placeholder="e.g., EMP101 or IT24..." required>
+    <button type="submit">Search User</button>
+</form>
+<hr>
+
+<div th:if="${user != null}">
+    <h2>User Details</h2>
+    <p><strong>University ID:</strong> <span th:text="${user.universityId}"></span></p>
+    <p><strong>Name:</strong> <span th:text="${user.name}"></span></p>
+    <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+    <p><strong>Role:</strong> <span th:text="${user.role}"></span></p>
+
+    <hr>
+    <h2>Update User Details</h2>
+    <form th:action="@{/admin/users/update}" th:object="${user}" method="post">
+        <input type="hidden" th:field="*{userId}"/>
+        <input type="hidden" th:field="*{universityId}"/>
+
+        <div>
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" th:field="*{name}" required>
+        </div>
+        <br>
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" th:field="*{email}" required>
+        </div>
+        <br>
+        <div>
+            <label for="password">New Password (leave blank to keep current):</label>
+            <input type="password" id="password" th:field="*{password}">
+        </div>
+        <br>
+        <div>
+            <label for="role">Role:</label>
+            <select id="role" th:field="*{role}" required>
+                <option value="Student">Student</option>
+                <option value="Lecturer">Lecturer</option>
+                <option value="IT_Support">IT Support Officer</option>
+                <option value="Help_Desk">Help Desk Officer</option>
+                <option value="Counselor">Student Counselor</option>
+            </select>
+        </div>
+        <br>
+        <button type="submit">Update User</button>
+    </form>
+
+    <hr>
+    <h2>Remove User</h2>
+    <p style="color: red;">Warning: This action cannot be undone.</p>
+    <form th:action="@{/admin/users/delete}" method="post" onsubmit="return confirm('Are you sure you want to remove this user?');">
+        <input type="hidden" name="userId" th:value="${user.userId}"/>
+        <button type="submit" style="background-color: red; color: white;">Confirm Removal</button>
+    </form>
+</div>
+<br>
+<a th:href="@{/admin/users}"><button>Back to User Management</button></a>
+</body>
+</html>

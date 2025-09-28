@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Add New User</title>
+</head>
+<body>
+<h1>Add New User</h1>
+<form th:action="@{/admin/users}" th:object="${user}" method="post">
+  <div>
+    <label for="name">Full Name:</label>
+    <input type="text" id="name" th:field="*{name}" required>
+  </div>
+  <br>
+  <div>
+    <label for="universityId">University ID:</label>
+    <input type="text" id="universityId" th:field="*{universityId}" required>
+  </div>
+  <br>
+  <div>
+    <label for="email">Email:</label>
+    <input type="email" id="email" th:field="*{email}" required>
+  </div>
+  <br>
+  <div>
+    <label for="password">Password:</label>
+    <input type="password" id="password" th:field="*{password}" required>
+  </div>
+  <br>
+  <div>
+    <label for="role">Role:</label>
+    <select id="role" th:field="*{role}" required>
+      <option value="">Select a Role</option>
+      <option value="Student">Student</option>
+      <option value="Lecturer">Lecturer</option>
+      <option value="IT_Support">IT Support Officer</option>
+      <option value="Help_Desk">Help Desk Officer</option>
+      <option value="Counselor">Student Counselor</option>
+    </select>
+  </div>
+  <br>
+  <button type="submit">Add User</button>
+</form>
+<br>
+<a th:href="@{/admin/users}"><button>Back to User Management</button></a>
+</body>
+</html>
