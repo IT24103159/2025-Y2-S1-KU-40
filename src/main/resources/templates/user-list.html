@@ -4,29 +4,78 @@
     <meta charset="UTF-8">
     <title>User List</title>
     <style>
-        table { width: 100%; border-collapse: collapse; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
         th, td { border: 1px solid #dddddd; text-align: left; padding: 8px; }
         th { background-color: #f2f2f2; }
         tr:nth-child(even) { background-color: #f9f9f9; }
-        th a { text-decoration: none; color: black; }
+        h2 { border-bottom: 2px solid #4CAF50; padding-bottom: 5px; }
     </style>
 </head>
 <body>
 <h1>System User List</h1>
 
+<h2>Students</h2>
 <table>
     <thead>
     <tr>
+        <th>No.</th>
         <th>University ID</th>
         <th>Name</th>
         <th>Email</th>
-        <th>
-            <a th:href="@{/admin/users/list(sortBy='role')}">Role</a>
-        </th>
+        <th>Faculty</th>
+        <th>Role</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="user : ${users}">
+    <tr th:each="user, loop : ${studentList}">
+        <td th:text="${loop.count}"></td>
+        <td th:text="${user.universityId}"></td>
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.email}"></td>
+        <td th:text="${user.facultyName}"></td>
+        <td th:text="${user.specificRole}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<h2>Lecturers</h2>
+<table>
+    <thead>
+    <tr>
+        <th>No.</th>
+        <th>University ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Faculty</th>
+        <th>Role</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user, loop : ${lecturerList}">
+        <td th:text="${loop.count}"></td>
+        <td th:text="${user.universityId}"></td>
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.email}"></td>
+        <td th:text="${user.facultyName}"></td>
+        <td th:text="${user.specificRole}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<h2>Staff Members</h2>
+<table>
+    <thead>
+    <tr>
+        <th>No.</th>
+        <th>University ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user, loop : ${staffList}">
+        <td th:text="${loop.count}"></td>
         <td th:text="${user.universityId}"></td>
         <td th:text="${user.name}"></td>
         <td th:text="${user.email}"></td>

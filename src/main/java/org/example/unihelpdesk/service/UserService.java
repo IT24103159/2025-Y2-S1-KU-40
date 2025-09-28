@@ -5,6 +5,7 @@ import org.example.unihelpdesk.dto.UserListDTO;
 import org.example.unihelpdesk.model.User;
 import java.util.Optional;
 import java.util.List;
+import java.util.Map;
 
 
 public interface UserService {
@@ -15,4 +16,5 @@ public interface UserService {
     void updateUser(UserDTO userDTO) throws Exception;
     void deleteUser(Integer userId);
     List<UserListDTO> getAllUsersForDisplay();
+    Map<String, List<UserListDTO>> getAllUsersGroupedByRole();
 }

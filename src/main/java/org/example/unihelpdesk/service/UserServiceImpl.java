@@ -2,20 +2,17 @@ package org.example.unihelpdesk.service;
 
 import org.example.unihelpdesk.dto.UserDTO;
 import org.example.unihelpdesk.dto.UserListDTO;
-import org.example.unihelpdesk.model.Lecturer;
-import org.example.unihelpdesk.model.Student;
-import org.example.unihelpdesk.model.SupportStaff;
-import org.example.unihelpdesk.model.User;
-import org.example.unihelpdesk.repository.LecturerRepository;
-import org.example.unihelpdesk.repository.StudentRepository;
-import org.example.unihelpdesk.repository.SupportStaffRepository;
-import org.example.unihelpdesk.repository.UserRepository;
+import org.example.unihelpdesk.model.*;
+import org.example.unihelpdesk.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +26,8 @@ public class UserServiceImpl implements UserService {
     private LecturerRepository lecturerRepository;
     @Autowired
     private SupportStaffRepository supportStaffRepository;
+    @Autowired
+    private FacultyRepository facultyRepository;
 
     @Override
     public Optional<User> authenticate(String universityId, String password) {
@@ -58,14 +57,20 @@ public class UserServiceImpl implements UserService {
         if ("Student".equals(role)) {
             user.setRole("Student");
             User savedUser = userRepository.save(user);
+            Faculty faculty = facultyRepository.findById(userDTO.getFacultyId())
+                    .orElseThrow(() -> new Exception("Invalid Faculty ID"));
             Student student = new Student();
             student.setUserId(savedUser.getUserId());
+            student.setFaculty(faculty);
             studentRepository.save(student);
         } else if ("Lecturer".equals(role)) {
             user.setRole("Lecturer");
             User savedUser = userRepository.save(user);
+            Faculty faculty = facultyRepository.findById(userDTO.getFacultyId())
+                    .orElseThrow(() -> new Exception("Invalid Faculty ID"));
             Lecturer lecturer = new Lecturer();
             lecturer.setUserId(savedUser.getUserId());
+            lecturer.setFaculty(faculty);
             lecturerRepository.save(lecturer);
         } else if ("IT_Support".equals(role) || "Help_Desk".equals(role) || "Counselor".equals(role)) {
             user.setRole("Staff");
@@ -93,69 +98,86 @@ public class UserServiceImpl implements UserService {
         String role = user.getRole();
         if ("Staff".equals(role)) {
             SupportStaff staff = supportStaffRepository.findById(user.getUserId()).orElse(new SupportStaff());
-            dto.setRole(staff.getStaffType()); // "IT_Support", "Help_Desk", etc.
+            dto.setRole(staff.getStaffType());
         } else {
-            dto.setRole(role); // "Student", "Lecturer", etc.
+            dto.setRole(role);
+            if ("Student".equals(role)) {
+                Student student = studentRepository.findById(user.getUserId()).orElse(null);
+                if (student != null && student.getFaculty() != null) {
+                    dto.setFacultyId(student.getFaculty().getFacultyId());
+                    dto.setFacultyName(student.getFaculty().getFacultyName());
+                }
+            } else if ("Lecturer".equals(role)) {
+                Lecturer lecturer = lecturerRepository.findById(user.getUserId()).orElse(null);
+                if (lecturer != null && lecturer.getFaculty() != null) {
+                    dto.setFacultyId(lecturer.getFaculty().getFacultyId());
+                    dto.setFacultyName(lecturer.getFaculty().getFacultyName());
+                }
+            }
         }
         return dto;
     }
-
     @Override
     @Transactional
     public void updateUser(UserDTO userDTO) throws Exception {
         User user = userRepository.findById(userDTO.getUserId())
                 .orElseThrow(() -> new Exception("User not found for update."));
 
-        // Update common fields
         user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());
 
-        // Only update password if a new one is provided
         if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
-            user.setPasswordHash(userDTO.getPassword()); // Hash this in a real app!
+            user.setPasswordHash(userDTO.getPassword());
         }
 
         String newRoleType = userDTO.getRole();
-        String currentDbRole = user.getRole();
         String currentSpecificRole = findUserForManagement(user.getUniversityId()).getRole();
 
-        // If role is not changed, just save and exit
+
         if (newRoleType.equals(currentSpecificRole)) {
+            if("Student".equals(newRoleType)) {
+                Student student = studentRepository.findById(user.getUserId()).orElseThrow(() -> new Exception("Student details not found."));
+                Faculty faculty = facultyRepository.findById(userDTO.getFacultyId()).orElseThrow(() -> new Exception("Selected faculty not found."));
+                student.setFaculty(faculty);
+                studentRepository.save(student);
+            } else if ("Lecturer".equals(newRoleType)) {
+                Lecturer lecturer = lecturerRepository.findById(user.getUserId()).orElseThrow(() -> new Exception("Lecturer details not found."));
+                Faculty faculty = facultyRepository.findById(userDTO.getFacultyId()).orElseThrow(() -> new Exception("Selected faculty not found."));
+                lecturer.setFaculty(faculty);
+                lecturerRepository.save(lecturer);
+            }
             userRepository.save(user);
             return;
         }
 
-        // Role has changed, so we need to delete from the old specialized table
-        if ("Student".equals(currentSpecificRole)) {
-            studentRepository.deleteById(user.getUserId());
-        } else if ("Lecturer".equals(currentSpecificRole)) {
-            lecturerRepository.deleteById(user.getUserId());
-        } else { // It was a staff role
-            supportStaffRepository.deleteById(user.getUserId());
-        }
 
-        // Now, add to the new specialized table
+        if ("Student".equals(currentSpecificRole)) studentRepository.deleteById(user.getUserId());
+        else if ("Lecturer".equals(currentSpecificRole)) lecturerRepository.deleteById(user.getUserId());
+        else supportStaffRepository.deleteById(user.getUserId());
+
         if ("Student".equals(newRoleType)) {
             user.setRole("Student");
+            Faculty faculty = facultyRepository.findById(userDTO.getFacultyId()).orElseThrow(() -> new Exception("Selected faculty not found."));
             Student student = new Student();
             student.setUserId(user.getUserId());
+            student.setFaculty(faculty);
             studentRepository.save(student);
         } else if ("Lecturer".equals(newRoleType)) {
             user.setRole("Lecturer");
+            Faculty faculty = facultyRepository.findById(userDTO.getFacultyId()).orElseThrow(() -> new Exception("Selected faculty not found."));
             Lecturer lecturer = new Lecturer();
             lecturer.setUserId(user.getUserId());
+            lecturer.setFaculty(faculty);
             lecturerRepository.save(lecturer);
-        } else { // It's a new staff role
+        } else { // It's a staff role
             user.setRole("Staff");
             SupportStaff staff = new SupportStaff();
             staff.setUserId(user.getUserId());
             staff.setStaffType(newRoleType);
             supportStaffRepository.save(staff);
         }
-
         userRepository.save(user);
     }
-
     @Override
     public void deleteUser(Integer userId) {
         userRepository.deleteById(userId);
@@ -170,10 +192,9 @@ public class UserServiceImpl implements UserService {
         for (User user : users) {
             String specificRole = user.getRole();
             if ("Staff".equals(specificRole)) {
-
                 SupportStaff staff = supportStaffRepository.findById(user.getUserId()).orElse(null);
                 if (staff != null) {
-                    specificRole = staff.getStaffType(); // "IT_Support", "Help_Desk", etc.
+                    specificRole = staff.getStaffType();
                 }
             }
             userList.add(new UserListDTO(
@@ -184,5 +205,40 @@ public class UserServiceImpl implements UserService {
             ));
         }
         return userList;
+    }
+    @Override
+    public Map<String, List<UserListDTO>> getAllUsersGroupedByRole() {
+        // created_at එක අනුව users ලාව sort කරලා list එකක් ගන්නවා
+        List<User> sortedUsers = userRepository.findAll().stream()
+                .sorted(Comparator.comparing(User::getCreatedAt))
+                .collect(Collectors.toList());
+
+        List<UserListDTO> students = new ArrayList<>();
+        List<UserListDTO> lecturers = new ArrayList<>();
+        List<UserListDTO> staffMembers = new ArrayList<>();
+
+        for (User user : sortedUsers) {
+            String role = user.getRole();
+            if ("Student".equals(role)) {
+                Student student = studentRepository.findById(user.getUserId()).orElse(null);
+                String facultyName = (student != null && student.getFaculty() != null) ? student.getFaculty().getFacultyName() : "N/A";
+                students.add(new UserListDTO(user.getUniversityId(), user.getName(), user.getEmail(), "Student", facultyName));
+            } else if ("Lecturer".equals(role)) {
+                Lecturer lecturer = lecturerRepository.findById(user.getUserId()).orElse(null);
+                String facultyName = (lecturer != null && lecturer.getFaculty() != null) ? lecturer.getFaculty().getFacultyName() : "N/A";
+                lecturers.add(new UserListDTO(user.getUniversityId(), user.getName(), user.getEmail(), "Lecturer", facultyName));
+            } else if ("Staff".equals(role)) {
+                SupportStaff staff = supportStaffRepository.findById(user.getUserId()).orElse(null);
+                String staffType = (staff != null) ? staff.getStaffType() : "Unknown Staff";
+                staffMembers.add(new UserListDTO(user.getUniversityId(), user.getName(), user.getEmail(), staffType, null));
+            }
+        }
+
+        Map<String, List<UserListDTO>> groupedUsers = new HashMap<>();
+        groupedUsers.put("students", students);
+        groupedUsers.put("lecturers", lecturers);
+        groupedUsers.put("staffMembers", staffMembers);
+
+        return groupedUsers;
     }
 }

@@ -10,9 +10,9 @@
 <div th:if="${successMessage}" style="color: green;" th:text="${successMessage}"></div>
 <div th:if="${errorMessage}" style="color: red;" th:text="${errorMessage}"></div>
 
-<form th:action="@{/admin/users/search}" method="get">
-    <label for="universityId">University ID:</label>
-    <input type="text" id="universityId" name="universityId" placeholder="e.g., EMP101 or IT24..." required>
+<form th:action="@{/admin/users/search}" method="get" style="margin-bottom: 20px;">
+    <label for="searchUniversityId">University ID:</label>
+    <input type="text" id="searchUniversityId" name="universityId" required>
     <button type="submit">Search User</button>
 </form>
 <hr>
@@ -23,6 +23,9 @@
     <p><strong>Name:</strong> <span th:text="${user.name}"></span></p>
     <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
     <p><strong>Role:</strong> <span th:text="${user.role}"></span></p>
+    <p th:if="${user.role == 'Student' || user.role == 'Lecturer'}">
+        <strong>Faculty:</strong> <span th:text="${user.facultyName}"></span>
+    </p>
 
     <hr>
     <h2>Update User Details</h2>
@@ -47,12 +50,20 @@
         <br>
         <div>
             <label for="role">Role:</label>
-            <select id="role" th:field="*{role}" required>
+            <select id="role" th:field="*{role}" required onchange="toggleFacultySelect()">
                 <option value="Student">Student</option>
                 <option value="Lecturer">Lecturer</option>
                 <option value="IT_Support">IT Support Officer</option>
                 <option value="Help_Desk">Help Desk Officer</option>
                 <option value="Counselor">Student Counselor</option>
+            </select>
+        </div>
+        <br>
+        <div id="faculty-div" style="display:none;">
+            <label for="faculty">Faculty:</label>
+            <select id="faculty" th:field="*{facultyId}">
+                <option value="">Select Faculty</option>
+                <option th:each="fac : ${faculties}" th:value="${fac.facultyId}" th:text="${fac.facultyName}"></option>
             </select>
         </div>
         <br>
@@ -69,5 +80,25 @@
 </div>
 <br>
 <a th:href="@{/admin/users}"><button>Back to User Management</button></a>
+
+<script>
+    // Page load වෙද්දීත් function එක run කරනවා
+    document.addEventListener("DOMContentLoaded", function() {
+        toggleFacultySelect();
+    });
+
+    function toggleFacultySelect() {
+        var roleSelect = document.getElementById('role');
+        var facultyDiv = document.getElementById('faculty-div');
+        if (!roleSelect || !facultyDiv) return;
+
+        var selectedRole = roleSelect.value;
+        if (selectedRole === 'Student' || selectedRole === 'Lecturer') {
+            facultyDiv.style.display = 'block';
+        } else {
+            facultyDiv.style.display = 'none';
+        }
+    }
+</script>
 </body>
 </html>
