@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import jakarta.servlet.http.HttpSession;
 
 import java.util.Optional;
 
@@ -31,7 +32,7 @@ public class LoginController {
     @PostMapping("/login")
     public String handleLogin(@RequestParam String universityId,
                               @RequestParam String password,
-                              RedirectAttributes redirectAttributes) {
+                              RedirectAttributes redirectAttributes, HttpSession session) {
 
         Optional<User> userOptional = userRepository.findByUniversityId(universityId);
 
@@ -39,7 +40,7 @@ public class LoginController {
             User user = userOptional.get();
 
             if (user.getPasswordHash().equals(password)) {
-
+                session.setAttribute("loggedInUserId", user.getUserId());
                 String role = user.getRole();
 
                 if ("Admin".equals(user.getRole())) {

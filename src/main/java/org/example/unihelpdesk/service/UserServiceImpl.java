@@ -241,4 +241,9 @@ public class UserServiceImpl implements UserService {
 
         return groupedUsers;
     }
+
+    @Override
+    public User findUserById(Integer userId) {
+        return userRepository.findById(userId).orElse(null);
+    }
 }
