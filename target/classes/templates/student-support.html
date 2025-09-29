@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<h1>Submit a Support Ticket</h1>
+<form th:action="@{/student/support}" th:object="${ticket}" method="post" enctype="multipart/form-data">
+    <p><strong>University ID:</strong> <span th:text="${user.universityId}"></span></p>
+    <p><strong>Name:</strong> <span th:text="${user.name}"></span></p>
+    <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+    <p><strong>Faculty:</strong> <span th:text="${student.faculty.facultyName}"></span></p>
+
+    <div><label>Contact Number:</label><input type="text" th:field="*{studentContact}" required pattern="[0-9]{10}"></div>
+    <div><label>Category:</label>
+        <select th:field="*{category}" onchange="toggleModules()" required>
+            <option value="">Select Category</option>
+            <option value="IT_Support">IT Support</option>
+            <option value="Academic_Support">Academic Support</option>
+        </select>
+    </div>
+    <div id="modules-div" style="display:none;">
+        <label>Module:</label>
+        <select th:field="*{moduleId}">
+            <option value="">Select Module</option>
+            <option th:each="module : ${modules}" th:value="${module.moduleId}" th:text="${module.moduleName}"></option>
+        </select>
+    </div>
+    <div><label>Subject:</label><input type="text" th:field="*{subject}" required></div>
+    <div><label>Message:</label><textarea th:field="*{message}" required></textarea></div>
+
+    <br>
+
+    <div>
+        <label for="attachments">Attachments (Optional):</label>
+        <input type="file" id="attachments" name="attachments" multiple>
+    </div>
+    <br>
+
+    <button type="submit">Submit Ticket</button>
+</form>
+<script>
+    function toggleModules() {
+        var category = document.querySelector('[name=category]').value;
+        document.getElementById('modules-div').style.display = (category === 'Academic_Support') ? 'block' : 'none';
+    }
+</script>
+</body>
+</html>
