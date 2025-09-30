@@ -3,39 +3,294 @@
 <head>
     <meta charset="UTF-8">
     <title>Contact a Counsellor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .confidential-notice {
+            background: linear-gradient(135deg, #fff3f3 0%, #ffe6e6 100%);
+            color: #d9534f;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #d9534f;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 6px rgba(217, 83, 79, 0.1);
+        }
+
+        .counselor-container {
+            background: white;
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            max-width: 800px;
+            margin: 0 auto 30px auto;
+            transition: transform 0.3s ease;
+        }
+
+        .counselor-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .user-details {
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+            border: 1px solid #e1e5e9;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+        }
+
+        .user-details h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .user-details p {
+            margin: 10px 0;
+            color: #555;
+            font-size: 1rem;
+        }
+
+        .user-details strong {
+            color: #333;
+            font-weight: 600;
+        }
+
+        form {
+            width: 100%;
+        }
+
+        div {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            min-height: 200px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .submit-button {
+            background: linear-gradient(135deg, #d9534f 0%, #c9302c 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(217, 83, 79, 0.2);
+            width: 100%;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(217, 83, 79, 0.3);
+            background: linear-gradient(135deg, #c9302c 0%, #ac2925 100%);
+        }
+
+        .submit-button:active {
+            transform: translateY(0);
+        }
+
+        .back-button {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(108, 117, 125, 0.2);
+            max-width: 250px;
+            margin: 0 auto;
+            display: block;
+            text-align: center;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(108, 117, 125, 0.3);
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        br {
+            display: none;
+        }
+
+        .security-note {
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            font-style: italic;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            .counselor-container {
+                padding: 30px 25px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .confidential-notice {
+                padding: 15px;
+                font-size: 1rem;
+            }
+
+            .user-details {
+                padding: 20px;
+            }
+
+            .submit-button {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .counselor-container {
+                padding: 25px 20px;
+            }
+
+            .user-details {
+                padding: 15px;
+            }
+
+            .user-details p {
+                font-size: 0.9rem;
+            }
+
+            input[type="text"],
+            textarea {
+                padding: 12px;
+            }
+        }
+
+        /* Security animation */
+        @keyframes securePulse {
+            0% { box-shadow: 0 0 0 0 rgba(217, 83, 79, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(217, 83, 79, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(217, 83, 79, 0); }
+        }
+
+        .submit-button:hover {
+            animation: securePulse 1.5s infinite;
+        }
+    </style>
 </head>
 <body>
+<div class="counselor-container">
+    <h1>Confidential Support Request</h1>
 
-<h1>Confidential Support Request</h1>
-<p style="color: #d9534f; font-weight: bold;">
-    This form is strictly confidential. Your message will be encrypted and sent directly to a university counsellor.
-</p>
+    <div class="confidential-notice">
+        This form is strictly confidential. Your message will be encrypted and sent directly to a university counsellor.
+    </div>
 
-<div style="background-color: #f9f9f9; border: 1px solid #ddd; padding: 15px; margin-bottom: 20px;">
-    <h3>Your Details</h3>
-    <p><strong>University ID:</strong> <span th:text="${user.universityId}"></span></p>
-    <p><strong>Name:</strong> <span th:text="${user.name}"></span></p>
-    <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
-    <p><strong>Faculty:</strong> <span th:text="${student.faculty.facultyName}"></span></p>
+    <div class="user-details">
+        <h3>Your Details</h3>
+        <p><strong>University ID:</strong> <span th:text="${user.universityId}"></span></p>
+        <p><strong>Name:</strong> <span th:text="${user.name}"></span></p>
+        <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+        <p><strong>Faculty:</strong> <span th:text="${student.faculty.facultyName}"></span></p>
+    </div>
+
+    <form th:action="@{/student/counseling-support}" th:object="${ticket}" method="post">
+        <div>
+            <label for="subject">Subject:</label>
+            <input type="text" id="subject" th:field="*{subject}" required placeholder="Brief description of what you'd like to discuss" />
+        </div>
+
+        <div>
+            <label for="message">Your Confidential Message:</label>
+            <textarea id="message" th:field="*{message}" required placeholder="Please share your concerns in detail. This information is strictly confidential and will only be seen by qualified university counsellors."></textarea>
+        </div>
+
+        <button type="submit" class="submit-button">
+            Submit Securely
+        </button>
+        <p class="security-note">🔒 Your message is encrypted and secure</p>
+    </form>
 </div>
-<form th:action="@{/student/counseling-support}" th:object="${ticket}" method="post">
-    <div>
-        <label for="subject"><strong>Subject:</strong></label><br>
-        <input type="text" id="subject" th:field="*{subject}" required style="width: 500px; padding: 8px;" />
-    </div>
-    <br>
-    <div>
-        <label for="message"><strong>Your Confidential Message:</strong></label><br>
-        <textarea id="message" th:field="*{message}" rows="12" required style="width: 500px; padding: 8px;"></textarea>
-    </div>
-    <br>
-    <button type="submit" style="padding: 10px 20px; font-size: 16px; background-color: #d9534f; color: white; border: none; cursor: pointer;">
-        Submit Securely
-    </button>
-</form>
 
-<br>
-<a th:href="@{/student/dashboard}"><button>Back to Dashboard</button></a>
+<a th:href="@{/student/dashboard}"><button class="back-button">Back to Dashboard</button></a>
 
 </body>
 </html>
