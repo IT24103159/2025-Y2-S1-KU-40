@@ -14,10 +14,68 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #333;
+            text-decoration: none;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .main-content {
+            flex: 1;
             padding: 40px 20px;
         }
 
-        h1 {
+        .page-title {
             color: #333;
             text-align: center;
             margin-bottom: 20px;
@@ -192,18 +250,40 @@
             font-style: italic;
         }
 
+        /* Security animation */
+        @keyframes securePulse {
+            0% { box-shadow: 0 0 0 0 rgba(217, 83, 79, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(217, 83, 79, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(217, 83, 79, 0); }
+        }
+
+        .submit-button:hover {
+            animation: securePulse 1.5s infinite;
+        }
+
         /* Responsive design */
         @media (max-width: 768px) {
-            body {
+            .header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .main-content {
                 padding: 20px 15px;
+            }
+
+            .page-title {
+                font-size: 2rem;
             }
 
             .counselor-container {
                 padding: 30px 25px;
-            }
-
-            h1 {
-                font-size: 2rem;
             }
 
             .confidential-notice {
@@ -222,7 +302,7 @@
         }
 
         @media (max-width: 480px) {
-            h1 {
+            .page-title {
                 font-size: 1.8rem;
             }
 
@@ -242,55 +322,65 @@
             textarea {
                 padding: 12px;
             }
-        }
 
-        /* Security animation */
-        @keyframes securePulse {
-            0% { box-shadow: 0 0 0 0 rgba(217, 83, 79, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(217, 83, 79, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(217, 83, 79, 0); }
-        }
+            .header-nav {
+                flex-direction: column;
+                width: 100%;
+            }
 
-        .submit-button:hover {
-            animation: securePulse 1.5s infinite;
+            .nav-button {
+                width: 100%;
+                margin: 2px 0;
+            }
         }
     </style>
 </head>
 <body>
-<div class="counselor-container">
-    <h1>Confidential Support Request</h1>
-
-    <div class="confidential-notice">
-        This form is strictly confidential. Your message will be encrypted and sent directly to a university counsellor.
+<div class="header">
+    <div class="header-brand">
+        <h1>UniHelpDesk</h1>
     </div>
-
-    <div class="user-details">
-        <h3>Your Details</h3>
-        <p><strong>University ID:</strong> <span th:text="${user.universityId}"></span></p>
-        <p><strong>Name:</strong> <span th:text="${user.name}"></span></p>
-        <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
-        <p><strong>Faculty:</strong> <span th:text="${student.faculty.facultyName}"></span></p>
+    <div class="header-nav">
+        <a th:href="@{/student/dashboard}" class="nav-button">Dashboard</a>
+        <a th:href="@{/login}" class="nav-button">Logout</a>
     </div>
-
-    <form th:action="@{/student/counseling-support}" th:object="${ticket}" method="post">
-        <div>
-            <label for="subject">Subject:</label>
-            <input type="text" id="subject" th:field="*{subject}" required placeholder="Brief description of what you'd like to discuss" />
-        </div>
-
-        <div>
-            <label for="message">Your Confidential Message:</label>
-            <textarea id="message" th:field="*{message}" required placeholder="Please share your concerns in detail. This information is strictly confidential and will only be seen by qualified university counsellors."></textarea>
-        </div>
-
-        <button type="submit" class="submit-button">
-            Submit Securely
-        </button>
-        <p class="security-note">🔒 Your message is encrypted and secure</p>
-    </form>
 </div>
 
-<a th:href="@{/student/dashboard}"><button class="back-button">Back to Dashboard</button></a>
+<div class="main-content">
+    <div class="counselor-container">
+        <h1 class="page-title">Confidential Support Request</h1>
 
+        <div class="confidential-notice">
+            This form is strictly confidential. Your message will be encrypted and sent directly to a university counsellor.
+        </div>
+
+        <div class="user-details">
+            <h3>Your Details</h3>
+            <p><strong>University ID:</strong> <span th:text="${user.universityId}"></span></p>
+            <p><strong>Name:</strong> <span th:text="${user.name}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+            <p><strong>Faculty:</strong> <span th:text="${student.faculty.facultyName}"></span></p>
+        </div>
+
+        <form th:action="@{/student/counseling-support}" th:object="${ticket}" method="post">
+            <div>
+                <label for="subject">Subject:</label>
+                <input type="text" id="subject" th:field="*{subject}" required placeholder="Brief description of what you'd like to discuss" />
+            </div>
+
+            <div>
+                <label for="message">Your Confidential Message:</label>
+                <textarea id="message" th:field="*{message}" required placeholder="Please share your concerns in detail. This information is strictly confidential and will only be seen by qualified university counsellors."></textarea>
+            </div>
+
+            <button type="submit" class="submit-button">
+                Submit Securely
+            </button>
+            <p class="security-note">🔒 Your message is encrypted and secure</p>
+        </form>
+    </div>
+
+    <a th:href="@{/student/dashboard}"><button class="back-button">Back to Dashboard</button></a>
+</div>
 </body>
 </html>
