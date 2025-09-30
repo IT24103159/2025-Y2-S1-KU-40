@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/lecturer")
+@RequestMapping("/lecturer") // මේ controller එකේ எல்லா URLs /lecturer වලින් පටන් ගන්නේ
 public class LecturerController {
 
     private final TicketService ticketService;
@@ -18,27 +18,27 @@ public class LecturerController {
         this.ticketService = ticketService;
     }
 
-
+    // Assign කරපු tickets බලන page එකට
     @GetMapping("/tickets")
     public String getAssignedTickets(Model model, HttpSession session) {
         Integer userId = (Integer) session.getAttribute("loggedInUserId");
         if (userId == null) return "redirect:/login";
 
         model.addAttribute("tickets", ticketService.getTicketsAssignedToUser(userId));
-        return "lecturer-assigned-ticket-list";
+        return "lecturer-assigned-ticket-list"; // අලුතින් හදන HTML file එක
     }
 
-
+    // Ticket එකක details බලන page එකට
     @GetMapping("/ticket/view/{ticketId}")
     public String viewTicket(@PathVariable Integer ticketId, Model model, HttpSession session) {
         Integer userId = (Integer) session.getAttribute("loggedInUserId");
         if (userId == null) return "redirect:/login";
 
         model.addAttribute("ticket", ticketService.getTicketDetails(ticketId));
-        return "lecturer-view-ticket";
+        return "lecturer-view-ticket"; // අලුතින් හදන HTML file එක
     }
 
-
+    // Response එක submit කරනකොට
     @PostMapping("/ticket/respond")
     public String respondToTicket(@RequestParam Integer ticketId,
                                   @RequestParam String responseMessage,
@@ -60,14 +60,14 @@ public class LecturerController {
         return "redirect:/lecturer/dashboard";
     }
 
-
+    // තමන් යවපු responses බලන page එකට
     @GetMapping("/responses")
     public String getMyResponses(Model model, HttpSession session) {
         Integer userId = (Integer) session.getAttribute("loggedInUserId");
         if (userId == null) return "redirect:/login";
 
         model.addAttribute("responses", ticketService.getResponsesByOfficer(userId));
-
+        // IT Support Officer ට පාවිච්චි කරපු HTML එකම මෙතනත් පාවිච්චි කරනවා
         return "my-responses-list";
     }
 }

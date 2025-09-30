@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/it-support")
+@RequestMapping("/it-support") // මේ controller එකේ எல்லா URLs /it-support වලින් පටන් ගන්නේ
 public class ITSupportController {
 
     private final TicketService ticketService;
@@ -18,27 +18,27 @@ public class ITSupportController {
         this.ticketService = ticketService;
     }
 
-
+    // Assign කරපු tickets බලන page එකට
     @GetMapping("/tickets")
     public String getAssignedTickets(Model model, HttpSession session) {
         Integer userId = (Integer) session.getAttribute("loggedInUserId");
         if (userId == null) return "redirect:/login";
 
         model.addAttribute("tickets", ticketService.getTicketsAssignedToUser(userId));
-        return "it-assigned-ticket-list";
+        return "it-assigned-ticket-list"; // අලුතින් හදන HTML file එක
     }
 
-
+    // Ticket එකක details බලන page එකට
     @GetMapping("/ticket/view/{ticketId}")
     public String viewTicket(@PathVariable Integer ticketId, Model model, HttpSession session) {
         Integer userId = (Integer) session.getAttribute("loggedInUserId");
         if (userId == null) return "redirect:/login";
 
         model.addAttribute("ticket", ticketService.getTicketDetails(ticketId));
-        return "it-view-ticket";
+        return "it-view-ticket"; // අලුතින් හදන HTML file එක
     }
 
-
+    // Response එක submit කරනකොට
     @PostMapping("/ticket/respond")
     public String respondToTicket(@RequestParam Integer ticketId,
                                   @RequestParam String responseMessage,
@@ -47,7 +47,7 @@ public class ITSupportController {
         Integer userId = (Integer) session.getAttribute("loggedInUserId");
         if (userId == null) return "redirect:/login";
 
-        User staffMember = new User();
+        User staffMember = new User(); // We only need the ID for the service method
         staffMember.setUserId(userId);
 
         try {
@@ -60,14 +60,14 @@ public class ITSupportController {
         return "redirect:/it-support/dashboard";
     }
 
-
+    // තමන් යවපු responses බලන page එකට
     @GetMapping("/responses")
     public String getMyResponses(Model model, HttpSession session) {
         Integer userId = (Integer) session.getAttribute("loggedInUserId");
         if (userId == null) return "redirect:/login";
 
-
+        // Help Desk Officer ට හදපු service method එකම මෙතනත් පාවිච්චි කරනවා
         model.addAttribute("responses", ticketService.getResponsesByOfficer(userId));
-        return "my-responses-list";
+        return "my-responses-list"; // පරණ HTML file එකම reuse කරනවා
     }
 }

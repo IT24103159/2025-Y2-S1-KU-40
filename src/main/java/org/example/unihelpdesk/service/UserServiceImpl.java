@@ -208,7 +208,7 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public Map<String, List<UserListDTO>> getAllUsersGroupedByRole() {
-
+        // created_at එක අනුව users ලාව sort කරලා list එකක් ගන්නවා
         List<User> sortedUsers = userRepository.findAll().stream()
                 .sorted(Comparator.comparing(User::getCreatedAt))
                 .collect(Collectors.toList());

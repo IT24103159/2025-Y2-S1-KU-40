@@ -31,17 +31,17 @@ public class FileStorageService {
 
     public String save(MultipartFile file) {
         try {
-
+            // file එකේ original නම ගන්නවා
             String originalFilename = file.getOriginalFilename();
 
-
+            // original නම එක්ක unique ID එකක් එකතු කරලා අලුත් නමක් හදනවා (එකම නමින් files ආවොත් overwrite නොවෙන්න)
             String uniqueFilename = UUID.randomUUID().toString() + "_" + originalFilename;
 
-
+            // file එක save කරන්න ඕන සම්පූර්ණ path එක හදාගන්නවා
             Path destinationPath = this.root.resolve(uniqueFilename);
             Files.copy(file.getInputStream(), destinationPath);
 
-
+            // database එකේ save කරන්න, අලුතින් හදපු unique නම විතරක් return කරනවා
             return uniqueFilename;
 
         } catch (Exception e) {
@@ -49,7 +49,11 @@ public class FileStorageService {
         }
     }
 
-
+    /**
+     * මේ තමයි අලුතින් එකතු කරපු load() method එක.
+     * @param filename - download කරන්න අවශ්‍ය file එකේ නම
+     * @return - Resource object එකක්
+     */
     public Resource load(String filename) {
         try {
             Path file = root.resolve(filename);
