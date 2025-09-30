@@ -1,41 +1,292 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Submit a Support Ticket</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .ticket-container {
+            background: white;
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            max-width: 800px;
+            margin: 0 auto;
+            transition: transform 0.3s ease;
+        }
+
+        .ticket-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .user-info {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+        }
+
+        .user-info p {
+            margin: 8px 0;
+            color: #555;
+            font-size: 1rem;
+        }
+
+        .user-info strong {
+            color: #333;
+            font-weight: 600;
+        }
+
+        form {
+            width: 100%;
+        }
+
+        div {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        input[type="text"],
+        input[type="file"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        input[type="text"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            background: white;
+            border: 2px dashed #e1e5e9;
+        }
+
+        input[type="file"]:focus {
+            border-color: #667eea;
+            border-style: solid;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(102, 126, 234, 0.2);
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        #modules-div {
+            transition: all 0.3s ease;
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .file-info {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .required::after {
+            content: " *";
+            color: #dc3545;
+        }
+
+        br {
+            display: none;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            .ticket-container {
+                padding: 30px 25px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .user-info {
+                padding: 20px;
+            }
+
+            button {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .ticket-container {
+                padding: 25px 20px;
+            }
+
+            .user-info {
+                padding: 15px;
+            }
+
+            .user-info p {
+                font-size: 0.9rem;
+            }
+
+            input[type="text"],
+            select,
+            textarea {
+                padding: 10px 14px;
+            }
+        }
+
+        /* Animation for module section */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #modules-div[style*="block"] {
+            animation: slideDown 0.3s ease-out;
+        }
+    </style>
+</head>
 <body>
-<h1>Submit a Support Ticket</h1>
-<form th:action="@{/student/support}" th:object="${ticket}" method="post" enctype="multipart/form-data">
-    <p><strong>University ID:</strong> <span th:text="${user.universityId}"></span></p>
-    <p><strong>Name:</strong> <span th:text="${user.name}"></span></p>
-    <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
-    <p><strong>Faculty:</strong> <span th:text="${student.faculty.facultyName}"></span></p>
+<div class="ticket-container">
+    <h1>Submit a Support Ticket</h1>
 
-    <div><label>Contact Number:</label><input type="text" th:field="*{studentContact}" required pattern="[0-9]{10}"></div>
-    <div><label>Category:</label>
-        <select th:field="*{category}" onchange="toggleModules()" required>
-            <option value="">Select Category</option>
-            <option value="IT_Support">IT Support</option>
-            <option value="Academic_Support">Academic Support</option>
-        </select>
+    <div class="user-info">
+        <p><strong>University ID:</strong> <span th:text="${user.universityId}"></span></p>
+        <p><strong>Name:</strong> <span th:text="${user.name}"></span></p>
+        <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+        <p><strong>Faculty:</strong> <span th:text="${student.faculty.facultyName}"></span></p>
     </div>
-    <div id="modules-div" style="display:none;">
-        <label>Module:</label>
-        <select th:field="*{moduleId}">
-            <option value="">Select Module</option>
-            <option th:each="module : ${modules}" th:value="${module.moduleId}" th:text="${module.moduleName}"></option>
-        </select>
-    </div>
-    <div><label>Subject:</label><input type="text" th:field="*{subject}" required></div>
-    <div><label>Message:</label><textarea th:field="*{message}" required></textarea></div>
 
-    <br>
+    <form th:action="@{/student/support}" th:object="${ticket}" method="post" enctype="multipart/form-data">
+        <div>
+            <label class="required">Contact Number:</label>
+            <input type="text" th:field="*{studentContact}" required pattern="[0-9]{10}" placeholder="Enter 10-digit phone number">
+        </div>
 
-    <div>
-        <label for="attachments">Attachments (Optional):</label>
-        <input type="file" id="attachments" name="attachments" multiple>
-    </div>
-    <br>
+        <div>
+            <label class="required">Category:</label>
+            <select th:field="*{category}" onchange="toggleModules()" required>
+                <option value="">Select Category</option>
+                <option value="IT_Support">IT Support</option>
+                <option value="Academic_Support">Academic Support</option>
+            </select>
+        </div>
 
-    <button type="submit">Submit Ticket</button>
-</form>
+        <div id="modules-div" style="display:none;">
+            <label>Module:</label>
+            <select th:field="*{moduleId}">
+                <option value="">Select Module</option>
+                <option th:each="module : ${modules}" th:value="${module.moduleId}" th:text="${module.moduleName}"></option>
+            </select>
+        </div>
+
+        <div>
+            <label class="required">Subject:</label>
+            <input type="text" th:field="*{subject}" required placeholder="Brief description of your issue">
+        </div>
+
+        <div>
+            <label class="required">Message:</label>
+            <textarea th:field="*{message}" required placeholder="Please provide detailed information about your issue..."></textarea>
+        </div>
+
+        <div>
+            <label for="attachments">Attachments (Optional):</label>
+            <input type="file" id="attachments" name="attachments" multiple>
+            <p class="file-info">You can select multiple files. Maximum file size: 10MB each.</p>
+        </div>
+
+        <button type="submit">Submit Ticket</button>
+    </form>
+</div>
+
 <script>
     function toggleModules() {
         var category = document.querySelector('[name=category]').value;
