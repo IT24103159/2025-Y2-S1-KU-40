@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>My Tickets</title>
+  <style>
+    body { font-family: sans-serif; }
+    .container { max-width: 900px; margin: 20px auto; padding: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    th, td { border: 1px solid #dddddd; text-align: left; padding: 12px; }
+    th { background-color: #f2f2f2; }
+    tr:nth-child(even) { background-color: #f9f9f9; }
+    tr:hover { background-color: #f1f1f1; }
+    a { color: #0066cc; text-decoration: none; font-weight: bold; }
+    a:hover { text-decoration: underline; }
+    button { padding: 10px 15px; background-color: #555; color: white; border: none; cursor: pointer; border-radius: 4px; }
+    button:hover { background-color: #777; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>My Submitted Tickets</h1>
+
+  <table>
+    <thead>
+    <tr>
+      <th>Ticket ID</th>
+      <th>Category</th>
+      <th>Submitted At</th>
+      <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="ticket : ${tickets}">
+      <td>
+        <a th:href="@{/student/ticket/view/{id}(id=${ticket.ticketId})}" th:text="${ticket.ticketId}"></a>
+      </td>
+      <td th:text="${ticket.category}"></td>
+      <td th:text="${#temporals.format(ticket.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+      <td th:text="${ticket.status}"></td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(tickets)}">
+      <td colspan="4" style="text-align: center;">You have not submitted any tickets yet.</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <a th:href="@{/student/dashboard}"><button>Back to Dashboard</button></a>
+</div>
+</body>
+</html>

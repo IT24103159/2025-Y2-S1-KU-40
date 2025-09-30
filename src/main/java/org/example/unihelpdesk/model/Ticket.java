@@ -2,6 +2,12 @@ package org.example.unihelpdesk.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.FetchType;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -60,4 +66,11 @@ public class Ticket {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
+
+    @Setter
+    @Getter
+    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<TicketResponse> responses;
+
 }

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>View My Ticket</title>
+  <style>
+    body { font-family: sans-serif; }
+    .container { max-width: 800px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
+    h1, h2, h3 { border-bottom: 2px solid #007bff; padding-bottom: 5px; }
+    .details-grid, .message-box, .response-container { margin-bottom: 20px; }
+    .message-box, .response-message { background-color: #f9f9f9; border: 1px solid #eee; padding: 15px; border-radius: 4px; white-space: pre-wrap; }
+    .response-container { border: 1px solid #ccc; padding: 10px; border-radius: 5px; }
+    button { padding: 10px 15px; background-color: #555; color: white; border: none; cursor: pointer; border-radius: 4px; }
+    button:hover { background-color: #777; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Ticket Details</h1>
+  <div th:if="${ticket != null}">
+
+    <h3>Your Ticket Information</h3>
+    <div class="details-grid">
+      <p><strong>Ticket ID:</strong> <span th:text="${ticket.ticketId}"></span></p>
+      <p><strong>Status:</strong> <span th:text="${ticket.status}"></span></p>
+      <p><strong>Subject:</strong> <span th:text="${ticket.subject}"></span></p>
+    </div>
+
+    <h3>Your Original Message</h3>
+    <div class="message-box">
+      <p th:text="${ticket.message}"></p>
+    </div>
+    <hr>
+
+    <h2>Responses</h2>
+    <div th:if="${not #lists.isEmpty(ticket.responses)}">
+      <div th:each="response : ${ticket.responses}" class="response-container">
+        <p>
+          <strong>From:</strong> <span th:text="${response.responder.name}"></span>
+          (Replied on: <span th:text="${#temporals.format(response.createdAt, 'yyyy-MM-dd HH:mm')}"></span>)
+        </p>
+        <div class="response-message">
+          <p th:text="${response.responseMessage}"></p>
+        </div>
+      </div>
+    </div>
+    <div th:if="${#lists.isEmpty(ticket.responses)}">
+      <p>There are no responses for this ticket yet.</p>
+    </div>
+  </div>
+  <div th:if="${ticket == null}">
+    <p>Could not load ticket details.</p>
+  </div>
+
+  <br>
+  <a th:href="@{/student/my-tickets}">
+    <button>Back to My Tickets</button>
+  </a>
+</div>
+</body>
+</html>

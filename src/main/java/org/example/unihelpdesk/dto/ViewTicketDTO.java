@@ -1,9 +1,12 @@
 package org.example.unihelpdesk.dto;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.example.unihelpdesk.model.TicketAttachment;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.example.unihelpdesk.model.TicketResponse;
 
 @Data
 public class ViewTicketDTO {
@@ -27,4 +30,10 @@ public class ViewTicketDTO {
 
     // Attachments
     private List<TicketAttachment> attachments;
+
+    @Setter
+    @Getter
+    private List<TicketResponse> responses;
+
+
 }
