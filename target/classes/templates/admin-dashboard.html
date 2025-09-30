@@ -14,6 +14,66 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        .header {
+            background: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #333;
+            text-decoration: none;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
             padding: 40px 20px;
         }
 
@@ -84,7 +144,18 @@
 
         /* Responsive design */
         @media (max-width: 768px) {
-            body {
+            .header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .main-content {
                 padding: 20px 15px;
             }
 
@@ -123,14 +194,39 @@
                 width: 100%;
                 margin: 5px 0;
             }
+
+            .header-nav {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .nav-button {
+                width: 100%;
+                margin: 2px 0;
+            }
         }
     </style>
 </head>
 <body>
-<div class="dashboard-container">
-    <h1>Welcome, Admin!</h1>
-    <p>This is the administrator's dashboard.</p>
-    <a th:href="@{/admin/users}"><button>User Management</button></a>
+<!-- Header -->
+<div class="header">
+    <div class="header-brand">
+        <h1>UniHelpDesk</h1>
+    </div>
+    <div class="header-nav">
+
+        <a th:href="@{/admin/users}" class="nav-button">User Management</a>
+        <a th:href="@{/login}" class="nav-button">Logout</a>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <div class="dashboard-container">
+        <h1>Welcome, Admin!</h1>
+        <p>This is the administrator's dashboard.</p>
+        <a th:href="@{/admin/users}"><button>User Management</button></a>
+    </div>
 </div>
 </body>
 </html>
