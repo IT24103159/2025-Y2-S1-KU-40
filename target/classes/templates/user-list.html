@@ -4,87 +4,322 @@
     <meta charset="UTF-8">
     <title>User List</title>
     <style>
-        table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
-        th, td { border: 1px solid #dddddd; text-align: left; padding: 8px; }
-        th { background-color: #f2f2f2; }
-        tr:nth-child(even) { background-color: #f9f9f9; }
-        h2 { border-bottom: 2px solid #4CAF50; padding-bottom: 5px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .list-container {
+            background: white;
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            max-width: 1200px;
+            margin: 0 auto 30px auto;
+            transition: transform 0.3s ease;
+        }
+
+        .list-container:hover {
+            transform: translateY(-5px);
+        }
+
+        h2 {
+            color: #333;
+            margin: 40px 0 20px 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+            padding-bottom: 10px;
+            border-bottom: 3px solid;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2:nth-of-type(1) {
+            border-bottom-color: #4CAF50;
+        }
+
+        h2:nth-of-type(2) {
+            border-bottom-color: #2196F3;
+        }
+
+        h2:nth-of-type(3) {
+            border-bottom-color: #FF9800;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: left;
+            padding: 15px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e1e5e9;
+            color: #555;
+        }
+
+        tr {
+            transition: all 0.3s ease;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tr:nth-child(odd) {
+            background-color: white;
+        }
+
+        tr:hover {
+            background-color: #e3f2fd;
+            transform: translateX(5px);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(102, 126, 234, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .back-button {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            max-width: 250px;
+            margin: 0 auto;
+            display: block;
+            text-align: center;
+        }
+
+        .back-button:hover {
+            box-shadow: 0 6px 12px rgba(108, 117, 125, 0.3);
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .user-count {
+            background: #f8f9fa;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #667eea;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            .list-container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            th, td {
+                padding: 10px 12px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .list-container {
+                padding: 25px 15px;
+            }
+
+            h2 {
+                font-size: 1.3rem;
+            }
+
+            button {
+                width: 100%;
+                margin: 5px 0;
+            }
+
+            th, td {
+                padding: 8px 10px;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                padding: 20px;
+            }
+
+            .list-container {
+                box-shadow: none;
+                padding: 0;
+            }
+
+            button {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
-<h1>System User List</h1>
+<div class="list-container">
+    <h1>System User List</h1>
 
-<h2>Students</h2>
-<table>
-    <thead>
-    <tr>
-        <th>No.</th>
-        <th>University ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Faculty</th>
-        <th>Role</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="user, loop : ${studentList}">
-        <td th:text="${loop.count}"></td>
-        <td th:text="${user.universityId}"></td>
-        <td th:text="${user.name}"></td>
-        <td th:text="${user.email}"></td>
-        <td th:text="${user.facultyName}"></td>
-        <td th:text="${user.specificRole}"></td>
-    </tr>
-    </tbody>
-</table>
+    <div class="section-header">
+        <h2>Students</h2>
+        <span class="user-count" th:text="${studentList.size() + ' users'}"></span>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>No.</th>
+            <th>University ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Faculty</th>
+            <th>Role</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user, loop : ${studentList}">
+            <td th:text="${loop.count}"></td>
+            <td th:text="${user.universityId}"></td>
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.facultyName}"></td>
+            <td th:text="${user.specificRole}"></td>
+        </tr>
+        </tbody>
+    </table>
 
-<h2>Lecturers</h2>
-<table>
-    <thead>
-    <tr>
-        <th>No.</th>
-        <th>University ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Faculty</th>
-        <th>Role</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="user, loop : ${lecturerList}">
-        <td th:text="${loop.count}"></td>
-        <td th:text="${user.universityId}"></td>
-        <td th:text="${user.name}"></td>
-        <td th:text="${user.email}"></td>
-        <td th:text="${user.facultyName}"></td>
-        <td th:text="${user.specificRole}"></td>
-    </tr>
-    </tbody>
-</table>
+    <div class="section-header">
+        <h2>Lecturers</h2>
+        <span class="user-count" th:text="${lecturerList.size() + ' users'}"></span>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>No.</th>
+            <th>University ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Faculty</th>
+            <th>Role</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user, loop : ${lecturerList}">
+            <td th:text="${loop.count}"></td>
+            <td th:text="${user.universityId}"></td>
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.facultyName}"></td>
+            <td th:text="${user.specificRole}"></td>
+        </tr>
+        </tbody>
+    </table>
 
-<h2>Staff Members</h2>
-<table>
-    <thead>
-    <tr>
-        <th>No.</th>
-        <th>University ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Role</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="user, loop : ${staffList}">
-        <td th:text="${loop.count}"></td>
-        <td th:text="${user.universityId}"></td>
-        <td th:text="${user.name}"></td>
-        <td th:text="${user.email}"></td>
-        <td th:text="${user.specificRole}"></td>
-    </tr>
-    </tbody>
-</table>
+    <div class="section-header">
+        <h2>Staff Members</h2>
+        <span class="user-count" th:text="${staffList.size() + ' users'}"></span>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>No.</th>
+            <th>University ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user, loop : ${staffList}">
+            <td th:text="${loop.count}"></td>
+            <td th:text="${user.universityId}"></td>
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.specificRole}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
-<br>
-<a th:href="@{/admin/users}"><button>Back to User Management</button></a>
+<a th:href="@{/admin/users}"><button class="back-button">Back to User Management</button></a>
 </body>
 </html>
