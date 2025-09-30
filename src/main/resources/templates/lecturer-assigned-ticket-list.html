@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Assigned Academic Tickets</title>
+</head>
+<body>
+<h1>My Assigned Academic Tickets</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Ticket ID</th>
+        <th>Student ID</th>
+        <th>Category</th>
+        <th>Submitted At</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="ticket : ${tickets}">
+        <td>
+            <a th:href="@{/lecturer/ticket/view/{id}(id=${ticket.ticketId})}" th:text="${ticket.ticketId}"></a>
+        </td>
+        <td th:text="${ticket.studentUniversityId}"></td>
+        <td th:text="${ticket.category}"></td>
+        <td th:text="${#temporals.format(ticket.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(tickets)}">
+        <td colspan="4" style="text-align: center;">No academic tickets assigned to you.</td>
+    </tr>
+    </tbody>
+</table>
+<a th:href="@{/lecturer/dashboard}"><button>Back to Dashboard</button></a>
+</body>
+</html>

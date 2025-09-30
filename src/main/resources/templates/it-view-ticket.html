@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>View Assigned Ticket</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; }
+        .container { max-width: 800px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
+        h1, h2, h3 { border-bottom: 2px solid #4CAF50; padding-bottom: 5px; }
+        .details-grid { display: grid; grid-template-columns: 150px 1fr; gap: 10px; margin-bottom: 20px; }
+        .details-grid strong { font-weight: bold; }
+        .message-box { background-color: #f9f9f9; border: 1px solid #eee; padding: 15px; border-radius: 4px; white-space: pre-wrap; }
+        form { background-color: #f2f2f2; padding: 15px; border-radius: 4px; }
+        textarea { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 10px 15px; background-color: #4CAF50; color: white; border: none; cursor: pointer; border-radius: 4px; }
+        button:hover { background-color: #45a049; }
+        .attachment-list a { display: block; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Ticket Details</h1>
+
+    <div th:if="${ticket != null}">
+
+        <div class="details-grid">
+            <strong>Ticket ID:</strong>
+            <span th:text="${ticket.ticketId}"></span>
+
+            <strong>Submitted At:</strong>
+            <span th:text="${#temporals.format(ticket.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+
+            <strong>Status:</strong>
+            <span th:text="${ticket.status}"></span>
+
+            <hr style="grid-column: 1 / -1;"/>
+
+            <strong>Student ID:</strong>
+            <span th:text="${ticket.studentUniversityId}"></span>
+
+            <strong>Student Name:</strong>
+            <span th:text="${ticket.studentName}"></span>
+
+            <strong>Student Email:</strong>
+            <span th:text="${ticket.studentEmail}"></span>
+
+            <strong>Faculty:</strong>
+            <span th:text="${ticket.studentFaculty}"></span>
+
+            <strong>Contact Number:</strong>
+            <span th:text="${ticket.contactNumber}"></span>
+
+            <hr style="grid-column: 1 / -1;"/>
+
+            <strong>Category:</strong>
+            <span th:text="${ticket.category}"></span>
+
+            <th:block th:if="${ticket.category == 'Academic_Support'}">
+                <strong>Module:</strong>
+                <span th:text="${ticket.moduleName}"></span>
+            </th:block>
+
+            <strong>Subject:</strong>
+            <span th:text="${ticket.subject}"></span>
+        </div>
+
+        <h3>Message</h3>
+        <div class="message-box">
+            <p th:text="${ticket.message}"></p>
+        </div>
+
+        <div th:if="${not #lists.isEmpty(ticket.attachments)}">
+            <h3>Attachments</h3>
+            <div class="attachment-list">
+                <div th:each="att : ${ticket.attachments}">
+                    <a th:href="@{/files/download/{filename}(filename=${att.filePath})}" th:text="${att.fileName}">Download Attachment</a>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+        <h2>Respond to Ticket</h2>
+        <form th:action="@{/it-support/ticket/respond}" method="post">
+            <input type="hidden" name="ticketId" th:value="${ticket.ticketId}" />
+            <textarea name="responseMessage" placeholder="Type your response to the student..." required rows="5"></textarea>
+            <button type="submit">Send Response</button>
+        </form>
+    </div>
+
+    <div th:if="${ticket == null}">
+        <p>Could not find ticket details. Please go back and try again.</p>
+    </div>
+
+    <br>
+    <a th:href="@{/it-support/tickets}"><button style="background-color: #555;">Back to Ticket List</button></a>
+</div>
+</body>
+</html>

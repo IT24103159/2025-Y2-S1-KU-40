@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>View Confidential Ticket</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; }
+        .container { max-width: 800px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
+        h1, h2 { border-bottom: 2px solid #d9534f; padding-bottom: 5px; color: #d9534f;}
+        .details-grid { display: grid; grid-template-columns: 120px 1fr; gap: 10px; margin-bottom: 20px; }
+        .details-grid strong { font-weight: bold; }
+        .message-box { background-color: #f9f9f9; border: 1px solid #eee; padding: 15px; border-radius: 4px; white-space: pre-wrap; font-family: monospace; }
+        form { background-color: #f2f2f2; padding: 15px; border-radius: 4px; }
+        textarea { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 10px 15px; background-color: #d9534f; color: white; border: none; cursor: pointer; border-radius: 4px; }
+        button:hover { background-color: #c9302c; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Confidential Ticket</h1>
+
+    <div th:if="${ticket != null}">
+        <div class="details-grid">
+            <strong>Ticket ID:</strong>
+            <span th:text="${ticket.ticketId}"></span>
+
+            <strong>Status:</strong>
+            <span th:text="${ticket.status}"></span>
+
+            <strong>Subject:</strong>
+            <span th:text="${ticket.subject}"></span>
+        </div>
+
+        <h2>Student's Message (Decrypted)</h2>
+        <div class="message-box">
+            <p th:text="${ticket.message}"></p>
+        </div>
+
+        <hr style="margin-top: 25px; margin-bottom: 25px;">
+
+        <h2>Send Confidential Response</h2>
+        <form th:action="@{/counselor/ticket/respond}" method="post">
+            <input type="hidden" name="ticketId" th:value="${ticket.ticketId}" />
+            <textarea name="responseMessage" placeholder="Type your confidential response to the student..." required rows="8"></textarea>
+            <button type="submit">Send Secure Response</button>
+        </form>
+    </div>
+
+    <div th:if="${ticket == null}">
+        <p>Could not find ticket details.</p>
+    </div>
+
+    <br>
+    <a th:href="@{/counselor/tickets}"><button style="background-color: #555;">Back to Ticket List</button></a>
+</div>
+</body>
+</html>

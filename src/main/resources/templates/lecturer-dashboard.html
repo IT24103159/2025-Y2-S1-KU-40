@@ -6,7 +6,17 @@
 </head>
 <body>
 <h1>Welcome, Lecturer!</h1>
-<p>This is your dashboard. You can view student queries related to your modules here.</p>
+
+<div th:if="${successMessage}" style="color: green;">
+    <p th:text="${successMessage}"></p>
+</div>
+<div th:if="${errorMessage}" style="color: red;">
+    <p th:text="${errorMessage}"></p>
+</div>
+
+<a th:href="@{/lecturer/tickets}"><button>View Assigned Tickets</button></a>
+<br><br>
+<a th:href="@{/lecturer/responses}"><button>View My Responses</button></a>
 
 </body>
 </html>

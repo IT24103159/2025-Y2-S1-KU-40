@@ -19,4 +19,5 @@ public interface UserService {
     Map<String, List<UserListDTO>> getAllUsersGroupedByRole();
 
     User findUserById(Integer userId);
+    List<User> findStaffByType(String staffType);
 }

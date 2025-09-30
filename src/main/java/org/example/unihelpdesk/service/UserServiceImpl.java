@@ -246,4 +246,11 @@ public class UserServiceImpl implements UserService {
     public User findUserById(Integer userId) {
         return userRepository.findById(userId).orElse(null);
     }
+
+    public List<User> findStaffByType(String staffType) {
+        return supportStaffRepository.findByStaffType(staffType).stream()
+                .map(staff -> userRepository.findById(staff.getUserId()).orElse(null))
+                .filter(java.util.Objects::nonNull)
+                .collect(Collectors.toList());
+    }
 }

@@ -2,10 +2,27 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Counselor Dashboard</title>
+    <title>Counsellor Dashboard</title>
 </head>
 <body>
-<h1>Welcome, Student Counselor!</h1>
-<p>This is the dashboard for managing confidential student counseling requests.</p>
+<h1>Welcome, Student Counsellor!</h1>
+<p>This is your confidential dashboard to manage student support requests.</p>
+
+<div th:if="${successMessage}" style="color: green; border: 1px solid green; padding: 10px; margin-bottom: 15px;">
+    <p th:text="${successMessage}"></p>
+</div>
+<div th:if="${errorMessage}" style="color: red; border: 1px solid red; padding: 10px; margin-bottom: 15px;">
+    <p th:text="${errorMessage}"></p>
+</div>
+
+
+<a th:href="@{/counselor/tickets}">
+    <button style="padding: 10px 15px; font-size: 16px;">View Confidential Tickets</button>
+</a>
+<br><br>
+<a th:href="@{/counselor/responses}">
+    <button style="padding: 10px 15px; font-size: 16px;">View My Responses</button>
+</a>
+
 </body>
 </html>

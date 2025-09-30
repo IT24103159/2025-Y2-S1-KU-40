@@ -12,8 +12,7 @@ public class UserListDTO {
 
 
     public UserListDTO() {}
-
-   
+    
     public UserListDTO(String universityId, String name, String email, String specificRole, String facultyName) {
         this.universityId = universityId;
         this.name = name;

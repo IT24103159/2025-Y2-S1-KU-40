@@ -1,17 +1,49 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Unassigned Tickets</title>
+    <style>
+        body { font-family: sans-serif; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { border: 1px solid #dddddd; text-align: left; padding: 8px; }
+        th { background-color: #f2f2f2; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        tr:hover { background-color: #f1f1f1; }
+        a { color: #0066cc; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        button { padding: 10px 15px; background-color: #555; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #777; }
+    </style>
+</head>
 <body>
 <h1>Unassigned Tickets</h1>
+
 <table>
-    <thead><tr><th>Ticket ID</th><th>Student ID</th><th>Category</th><th>Submitted At</th></tr></thead>
+    <thead>
+    <tr>
+        <th>Ticket ID</th>
+        <th>Student ID</th>
+        <th>Category</th>
+        <th>Submitted At</th>
+    </tr>
+    </thead>
     <tbody>
     <tr th:each="ticket : ${tickets}">
-        <td><a href="#" th:text="${ticket.ticketId}"></a></td>
+        <td>
+            <a th:href="@{/help-desk/ticket/{id}(id=${ticket.ticketId})}" th:text="${ticket.ticketId}"></a>
+        </td>
         <td th:text="${ticket.studentUniversityId}"></td>
         <td th:text="${ticket.category}"></td>
         <td th:text="${#temporals.format(ticket.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
     </tr>
+    <tr th:if="${#lists.isEmpty(tickets)}">
+        <td colspan="4" style="text-align: center;">No unassigned tickets found.</td>
+    </tr>
     </tbody>
 </table>
+
+<a th:href="@{/help-desk/dashboard}"><button>Back to Dashboard</button></a>
+
 </body>
 </html>

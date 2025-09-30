@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact a Counsellor</title>
+</head>
+<body>
+
+<h1>Confidential Support Request</h1>
+<p style="color: #d9534f; font-weight: bold;">
+    This form is strictly confidential. Your message will be encrypted and sent directly to a university counsellor.
+</p>
+
+<div style="background-color: #f9f9f9; border: 1px solid #ddd; padding: 15px; margin-bottom: 20px;">
+    <h3>Your Details</h3>
+    <p><strong>University ID:</strong> <span th:text="${user.universityId}"></span></p>
+    <p><strong>Name:</strong> <span th:text="${user.name}"></span></p>
+    <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+    <p><strong>Faculty:</strong> <span th:text="${student.faculty.facultyName}"></span></p>
+</div>
+<form th:action="@{/student/counseling-support}" th:object="${ticket}" method="post">
+    <div>
+        <label for="subject"><strong>Subject:</strong></label><br>
+        <input type="text" id="subject" th:field="*{subject}" required style="width: 500px; padding: 8px;" />
+    </div>
+    <br>
+    <div>
+        <label for="message"><strong>Your Confidential Message:</strong></label><br>
+        <textarea id="message" th:field="*{message}" rows="12" required style="width: 500px; padding: 8px;"></textarea>
+    </div>
+    <br>
+    <button type="submit" style="padding: 10px 20px; font-size: 16px; background-color: #d9534f; color: white; border: none; cursor: pointer;">
+        Submit Securely
+    </button>
+</form>
+
+<br>
+<a th:href="@{/student/dashboard}"><button>Back to Dashboard</button></a>
+
+</body>
+</html>
