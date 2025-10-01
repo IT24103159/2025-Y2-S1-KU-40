@@ -4,42 +4,404 @@
     <meta charset="UTF-8">
     <title>My Confidential Tickets</title>
     <style>
-        body { font-family: sans-serif; }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        th, td { border: 1px solid #dddddd; text-align: left; padding: 8px; }
-        th { background-color: #f2f2f2; }
-        tr:hover { background-color: #f1f1f1; }
-        a { color: #0066cc; text-decoration: none; }
-        a:hover { text-decoration: underline; }
-        button { padding: 10px 15px; background-color: #555; color: white; border: none; cursor: pointer; }
-        button:hover { background-color: #777; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        .header {
+            background: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #333;
+            text-decoration: none;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .page-title {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .content-container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            max-width: 1200px;
+            width: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .content-container:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Confidential Banner */
+        .confidential-banner {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffecb3 100%);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border-left: 4px solid #ff9800;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .confidential-banner i {
+            color: #e65100;
+            font-size: 1.2rem;
+        }
+
+        .confidential-banner p {
+            color: #555;
+            font-size: 0.95rem;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        th {
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #eef2f7;
+            transition: all 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background-color: #f8f9ff;
+            transform: scale(1.005);
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        td {
+            padding: 15px 12px;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .ticket-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .ticket-link:hover {
+            color: #764ba2;
+            background-color: #f0f4ff;
+            text-decoration: underline;
+        }
+
+        .ticket-link i {
+            font-size: 0.9rem;
+        }
+
+        .no-tickets {
+            text-align: center;
+            color: #95a5a6;
+            font-style: italic;
+            padding: 40px 20px;
+            font-size: 1.1rem;
+        }
+
+        /* Category badges */
+        .category-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .category-mental-health {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        .category-academic {
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .category-personal {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .category-career {
+            background-color: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        /* Button Styles */
+        .button-group {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(102, 126, 234, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .main-content {
+                padding: 20px 15px;
+            }
+
+            .content-container {
+                padding: 25px 20px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            th, td {
+                padding: 12px 8px;
+                font-size: 0.9rem;
+            }
+
+            button {
+                padding: 10px 20px;
+                font-size: 0.95rem;
+            }
+
+            .confidential-banner {
+                padding: 12px 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 1.8rem;
+            }
+
+            .content-container {
+                padding: 20px 15px;
+            }
+
+            .header-nav {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .nav-button {
+                width: 100%;
+                margin: 2px 0;
+            }
+
+            th, td {
+                padding: 10px 6px;
+                font-size: 0.85rem;
+            }
+
+            .confidential-banner {
+                flex-direction: column;
+                text-align: center;
+                gap: 8px;
+            }
+        }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-<h1>My Assigned Confidential Tickets</h1>
-<table>
-    <thead>
-    <tr>
-        <th>Ticket ID</th>
-        <th>Student ID</th>
-        <th>Category</th>
-        <th>Submitted At</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="ticket : ${tickets}">
-        <td>
-            <a th:href="@{/counselor/ticket/view/{id}(id=${ticket.ticketId})}" th:text="${ticket.ticketId}"></a>
-        </td>
-        <td th:text="${ticket.studentUniversityId}"></td>
-        <td th:text="${ticket.category}"></td>
-        <td th:text="${#temporals.format(ticket.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
-    </tr>
-    <tr th:if="${#lists.isEmpty(tickets)}">
-        <td colspan="4" style="text-align: center;">No confidential tickets assigned to you at the moment.</td>
-    </tr>
-    </tbody>
-</table>
-<a th:href="@{/counselor/dashboard}"><button>Back to Dashboard</button></a>
+<!-- Header -->
+<div class="header">
+    <div class="header-brand">
+        <h1>UniHelpDesk</h1>
+    </div>
+    <div class="header-nav">
+        <a th:href="@{/counselor/dashboard}" class="nav-button">Dashboard</a>
+        <a th:href="@{/counselor/tickets}" class="nav-button">Confidential Tickets</a>
+        <a th:href="@{/counselor/responses}" class="nav-button">My Responses</a>
+        <a href="index.html" class="nav-button">Logout</a>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <h1 class="page-title">My Confidential Tickets</h1>
+
+    <div class="content-container">
+        <div class="confidential-banner">
+            <i class="fas fa-lock"></i>
+            <p>All student information and conversations are strictly confidential and protected under privacy regulations.</p>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Ticket ID</th>
+                <th>Student ID</th>
+                <th>Category</th>
+                <th>Submitted At</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="ticket : ${tickets}">
+                <td>
+                    <a class="ticket-link" th:href="@{/counselor/ticket/view/{id}(id=${ticket.ticketId})}">
+                        <i class="fas fa-file-alt"></i>
+                        <span th:text="${ticket.ticketId}"></span>
+                    </a>
+                </td>
+                <td th:text="${ticket.studentUniversityId}"></td>
+                <td>
+                    <span class="category-badge" th:classappend="'category-' + ${ticket.category?.toLowerCase()?.replace(' ', '-')}" th:text="${ticket.category}"></span>
+                </td>
+                <td th:text="${#temporals.format(ticket.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(tickets)}">
+                <td colspan="4" class="no-tickets">No confidential tickets assigned to you at the moment.</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="button-group">
+            <a th:href="@{/counselor/dashboard}"><button>Back to Dashboard</button></a>
+        </div>
+    </div>
+</div>
 </body>
 </html>
