@@ -87,18 +87,18 @@ public class TicketController {
         ViewTicketDTO ticketDetails = ticketService.getTicketDetails(ticketId);
         model.addAttribute("ticket", ticketDetails);
 
-        // Assign කරන්න dropdowns වලට data ගන්නවා
+
         if ("IT_Support".equals(ticketDetails.getCategory())) {
             model.addAttribute("assignableStaff", userService.findStaffByType("IT_Support"));
         } else if ("Academic_Support".equals(ticketDetails.getCategory())) {
-            // දැනට lecturers ලා ඔක්කොම ගන්නවා
+
             model.addAttribute("assignableStaff", userRepository.findByRole("Lecturer"));
         }
 
         return "view-ticket";
     }
 
-    // "Handle Myself" form එක handle කරන්න
+
     @PostMapping("/help-desk/ticket/respond")
     public String respondToTicket(@RequestParam Integer ticketId, @RequestParam String responseMessage, HttpSession session) {
         User officer = userService.findUserById((Integer) session.getAttribute("loggedInUserId"));
@@ -106,7 +106,7 @@ public class TicketController {
         return "redirect:/help-desk/tickets";
     }
 
-    // "Assign to Staff" form එක handle කරන්න
+
     @PostMapping("/help-desk/ticket/assign")
     public String assignTicket(@RequestParam Integer ticketId, @RequestParam Integer assignedToUserId, HttpSession session) {
         User officer = userService.findUserById((Integer) session.getAttribute("loggedInUserId"));
@@ -117,17 +117,17 @@ public class TicketController {
     @GetMapping("/help-desk/tickets/open")
     public String showOpenTickets(Model model) {
         model.addAttribute("tickets", ticketService.getOpenTickets());
-        return "open-ticket-list"; // අලුතින් හදන html file එක
+        return "open-ticket-list";
     }
 
     @GetMapping("/help-desk/responses")
     public String showMyResponses(Model model, HttpSession session) {
         Integer officerId = (Integer) session.getAttribute("loggedInUserId");
         if (officerId == null) {
-            return "redirect:/login"; // Login වෙලා නැත්නම් login page එකට යවනවා
+            return "redirect:/login";
         }
         model.addAttribute("responses", ticketService.getResponsesByOfficer(officerId));
-        return "my-responses-list"; // අලුතින් හදන html file එක
+        return "my-responses-list";
     }
 
     @GetMapping("/student/counseling-support")
@@ -137,19 +137,19 @@ public class TicketController {
             return "redirect:/login";
         }
 
-        // Student ගේ සහ Faculty එකේ details ගන්නවා
+
         User user = userService.findUserById(userId);
         Student student = studentRepository.findById(userId).orElse(null);
 
-        // ඒ details ටික model එකට එකතු කරනවා
+
         model.addAttribute("ticket", new TicketDTO());
         model.addAttribute("user", user);
         model.addAttribute("student", student);
 
-        return "counseling-support"; // counseling-support.html එකට යොමු කරනවා
+        return "counseling-support";
     }
 
-    // Counseling form එක submit කරන POST method එක
+
     @PostMapping("/student/counseling-support")
     public String createCounselingTicket(@ModelAttribute("ticket") TicketDTO ticketDTO,
                                          HttpSession session,
@@ -159,11 +159,36 @@ public class TicketController {
 
         try {
             User student = userService.findUserById(userId);
-            ticketService.createCounselingTicket(ticketDTO, student); // අලුත් service method එකක් call කරනවා
+            ticketService.createCounselingTicket(ticketDTO, student);
             redirectAttributes.addFlashAttribute("successMessage", "Your request has been sent to a counsellor securely.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Error: " + e.getMessage());
         }
         return "redirect:/student/dashboard";
+    }
+
+    @GetMapping("/student/my-tickets")
+    public String showMyTickets(Model model, HttpSession session) {
+        Integer userId = (Integer) session.getAttribute("loggedInUserId");
+        if (userId == null) return "redirect:/login";
+
+        model.addAttribute("tickets", ticketService.getTicketsByStudent(userId));
+        return "student-my-tickets";
+    }
+
+    @GetMapping("/student/ticket/view/{ticketId}")
+    public String viewMyTicketDetails(@PathVariable Integer ticketId, Model model, HttpSession session) {
+        Integer userId = (Integer) session.getAttribute("loggedInUserId");
+        if (userId == null) return "redirect:/login";
+
+        ViewTicketDTO ticketDetails = ticketService.getStudentTicketDetailsWithResponses(ticketId);
+
+
+        if (!ticketDetails.getStudentUniversityId().equals(session.getAttribute("universityId"))) {
+            return "redirect:/student/dashboard";
+        }
+
+        model.addAttribute("ticket", ticketDetails);
+        return "student-view-ticket";
     }
 }

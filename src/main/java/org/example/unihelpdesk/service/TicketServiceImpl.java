@@ -123,8 +123,8 @@ public class TicketServiceImpl implements TicketService {
     @Transactional
     public void handleBySelf(Integer ticketId, String responseMessage, User officer) {
         Ticket ticket = ticketRepository.findById(ticketId).orElseThrow();
-        ticket.setStatus("Answered"); // Status එක Open කරනවා
-        ticket.setAssignedTo(officer); // තමන්ටම assign කරගන්නවා
+        ticket.setStatus("Answered");
+        ticket.setAssignedTo(officer);
         ticketRepository.save(ticket);
 
         TicketResponse response = new TicketResponse();
@@ -150,7 +150,7 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public List<TicketListDTO> getOpenTickets() {
-        // "Open" Tickets යනු "Assigned" සහ "Answered" කළ ටිකට් වේ
+
         List<String> openStatuses = Arrays.asList("Assigned", "Answered");
         List<Ticket> tickets = ticketRepository.findByStatusIn(openStatuses);
 
@@ -174,16 +174,23 @@ public class TicketServiceImpl implements TicketService {
         User assignedUser = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
-        // "Assigned" status එකේ තියෙන tickets විතරක් ගන්නවා
+        // --- DEBUGGING ---
+        System.out.println("DEBUG: Fetching tickets assigned to user: " + assignedUser.getName());
+
+        // User ට assign කරපු tickets වලින්, status එක "Assigned" වන ඒවා විතරක් filter කරනවා
         List<Ticket> tickets = ticketRepository.findByAssignedTo(assignedUser).stream()
                 .filter(ticket -> "Assigned".equals(ticket.getStatus()))
                 .collect(Collectors.toList());
+
+        // --- DEBUGGING ---
+        System.out.println("DEBUG: Found " + tickets.size() + " tickets with 'Assigned' status for this user.");
 
         return tickets.stream().map(ticket -> new TicketListDTO(
                 ticket.getTicketId(),
                 ticket.getStudent().getUniversityId(),
                 ticket.getCategory(),
-                ticket.getCreatedAt()
+                ticket.getCreatedAt(),
+                ticket.getStatus()
         )).collect(Collectors.toList());
     }
 
@@ -193,12 +200,12 @@ public class TicketServiceImpl implements TicketService {
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new RuntimeException("Ticket not found with ID: " + ticketId));
 
-        // Security check: Ticket එක මේ staff member ට assign කරලද කියලා බලනවා
+
         if (!ticket.getAssignedTo().getUserId().equals(staffMember.getUserId())) {
             throw new SecurityException("You are not authorized to respond to this ticket.");
         }
 
-        ticket.setStatus("Answered"); // Status එක "Answered" කරනවා
+        ticket.setStatus("Answered");
         ticketRepository.save(ticket);
 
         TicketResponse response = new TicketResponse();
@@ -208,26 +215,27 @@ public class TicketServiceImpl implements TicketService {
         responseRepository.save(response);
     }
 
-    @Override
     @Transactional
     public void createCounselingTicket(TicketDTO ticketDTO, User student) throws Exception {
-        // Find an available counsellor (You can improve this logic, e.g., round-robin)
+
         List<User> counselors = userService.findStaffByType("Counselor");
         if (counselors.isEmpty()) {
             throw new Exception("No counsellors are available at the moment.");
         }
-        User assignedCounselor = counselors.get(0); // Assign to the first available counsellor
+        User assignedCounselor = counselors.get(0);
 
         Ticket ticket = new Ticket();
         ticket.setStudent(student);
         ticket.setSubject(ticketDTO.getSubject());
 
-        // **** Encrypt the message before saving ****
         String encryptedMessage = encryptionService.encrypt(ticketDTO.getMessage());
         ticket.setMessage(encryptedMessage);
 
         ticket.setCategory("Counseling_Support");
-        ticket.setStatus("Assigned"); // Directly assign, no "Unassigned" state
+
+
+        ticket.setStatus("Assigned");
+
         ticket.setAssignedTo(assignedCounselor);
 
         ticketRepository.save(ticket);
@@ -261,5 +269,51 @@ public class TicketServiceImpl implements TicketService {
             }
         });
         return responses;
+    }
+
+    @Override
+    public List<TicketListDTO> getTicketsByStudent(Integer studentId) {
+        User student = userRepository.findById(studentId)
+                .orElseThrow(() -> new RuntimeException("Student not found with ID: " + studentId));
+
+        List<Ticket> tickets = ticketRepository.findByStudent(student);
+
+        return tickets.stream().map(ticket -> new TicketListDTO(
+                ticket.getTicketId(),
+                ticket.getStudent().getUniversityId(),
+                ticket.getCategory(),
+                ticket.getCreatedAt(),
+                ticket.getStatus() //
+        )).collect(Collectors.toList());
+    }
+
+    @Override
+    public ViewTicketDTO getStudentTicketDetailsWithResponses(Integer ticketId) {
+
+        ViewTicketDTO dto = getDecryptedTicketDetails(ticketId);
+
+
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new RuntimeException("Ticket not found with ID: " + ticketId));
+
+        List<TicketResponse> responses = ticket.getResponses();
+
+
+        if ("Counseling_Support".equals(ticket.getCategory())) {
+            // Create a new list to hold decrypted responses
+            List<TicketResponse> decryptedResponses = new ArrayList<>();
+            for (TicketResponse response : responses) {
+                // Decrypt each response and add to the new list
+                String decryptedMessage = encryptionService.decrypt(response.getResponseMessage());
+                response.setResponseMessage(decryptedMessage);
+                decryptedResponses.add(response);
+            }
+            dto.setResponses(decryptedResponses);
+        } else {
+
+            dto.setResponses(responses);
+        }
+
+        return dto;
     }
 }

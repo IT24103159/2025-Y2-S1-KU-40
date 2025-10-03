@@ -462,11 +462,12 @@
                 </td>
                 <td th:text="${ticket.studentUniversityId}"></td>
                 <td>
-                        <span th:classappend="'category-badge ' +
-                            (${ticket.category} == 'Academic_Support'} ? 'category-academic' :
-                            (${ticket.category} == 'IT_Support'} ? 'category-it' : 'category-counseling')"
-                              th:text="${ticket.category}">
-                        </span>
+                        <span th:switch="${ticket.category}" class="category-badge" th:text="${ticket.category}">
+    <span th:case="'Academic_Support'" th:classappend="' category-academic'"></span>
+    <span th:case="'IT_Support'" th:classappend="' category-it'"></span>
+    <span th:case="*"
+          th:classappend="' category-counseling'"></span>
+</span>
                 </td>
                 <td th:text="${#temporals.format(ticket.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
             </tr>

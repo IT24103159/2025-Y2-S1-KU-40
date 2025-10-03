@@ -8,21 +8,31 @@ public class TicketListDTO {
     private String studentUniversityId;
     private String category;
     private LocalDateTime createdAt;
+    private String status;
+
 
 
     public TicketListDTO() {
 
     }
 
-    // 3. All-arguments constructor (එකවර දත්ත දාලා object එක හදන්න)
+
+    public TicketListDTO(Integer ticketId, String studentUniversityId, String category, LocalDateTime createdAt, String status) {
+        this.ticketId = ticketId;
+        this.studentUniversityId = studentUniversityId;
+        this.category = category;
+        this.createdAt = createdAt;
+        this.status = status;
+    }
+
     public TicketListDTO(Integer ticketId, String studentUniversityId, String category, LocalDateTime createdAt) {
         this.ticketId = ticketId;
         this.studentUniversityId = studentUniversityId;
         this.category = category;
         this.createdAt = createdAt;
+
     }
 
-    // 4. Public Getters and Setters (Thymeleaf වලට දත්ත කියවන්න අත්‍යවශ්‍යම කොටස)
     public Integer getTicketId() {
         return ticketId;
     }
@@ -54,4 +64,7 @@ public class TicketListDTO {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 }

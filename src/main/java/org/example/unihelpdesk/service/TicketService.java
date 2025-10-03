@@ -23,4 +23,7 @@ public interface TicketService {
     ViewTicketDTO getDecryptedTicketDetails(Integer ticketId);
     void addEncryptedResponseByStaff(Integer ticketId, String responseMessage, User staffMember);
     List<TicketResponse> getDecryptedResponsesByOfficer(Integer officerId);
+
+    List<TicketListDTO> getTicketsByStudent(Integer studentId);
+    ViewTicketDTO getStudentTicketDetailsWithResponses(Integer ticketId);
 }

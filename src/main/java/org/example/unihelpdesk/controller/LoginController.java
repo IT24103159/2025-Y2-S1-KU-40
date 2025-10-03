@@ -40,34 +40,38 @@ public class LoginController {
             User user = userOptional.get();
 
             if (user.getPasswordHash().equals(password)) {
-                session.setAttribute("loggedInUserId", user.getUserId());
-                String role = user.getRole();
 
-                if ("Admin".equals(user.getRole())) {
+                session.setAttribute("loggedInUserId", user.getUserId());
+                session.setAttribute("universityId", user.getUniversityId());
+
+
+                String role = user.getRole();
+                if ("Admin".equals(role)) {
                     return "redirect:/admin/dashboard";
                 }
-                if ("Student".equals(user.getRole())) {
+                if ("Student".equals(role)) {
                     return "redirect:/student/dashboard";
                 }
-                if ("Lecturer".equals(user.getRole())) {
+                if ("Lecturer".equals(role)) {
                     return "redirect:/lecturer/dashboard";
                 }
                 if ("Staff".equals(role)) {
                     Optional<SupportStaff> staffOptional = supportStaffRepository.findById(user.getUserId());
                     if (staffOptional.isPresent()) {
                         SupportStaff staff = staffOptional.get();
-                        if ("IT_Support".equals(staff.getStaffType())) {
-                            return "redirect:/it-support/dashboard";
-                        } else if ("Help_Desk".equals(staff.getStaffType())) {
-                            return "redirect:/help-desk/dashboard";
-                        }else if ("Counselor".equals(staff.getStaffType())) {
-                            return "redirect:/counselor/dashboard";
+                        switch (staff.getStaffType()) {
+                            case "IT_Support":
+                                return "redirect:/it-support/dashboard";
+                            case "Help_Desk":
+                                return "redirect:/help-desk/dashboard";
+                            case "Counselor":
+                                return "redirect:/counselor/dashboard";
                         }
                     }
                 }
             }
         }
-        redirectAttributes.addAttribute("error", "true");
+        redirectAttributes.addFlashAttribute("error", "Invalid University ID or Password");
         return "redirect:/login";
     }
 
