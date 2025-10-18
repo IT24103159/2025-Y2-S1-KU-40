@@ -23,10 +23,6 @@ public class LoginController {
     @Autowired
     private SupportStaffRepository supportStaffRepository;
 
-    @GetMapping("/")
-    public String showLoginPage() {
-        return "index";
-    }
 
 
     @PostMapping("/login")

@@ -199,9 +199,33 @@
 <br>
 <hr>
 
+<hr>
+<h2>Knowledge Base</h2>
+<div th:if="${articles.isEmpty()}">
+    <p>No articles found in the Knowledge Base yet.</p>
+</div>
+<div th:unless="${articles.isEmpty()}">
+    <ul style="list-style-type: none; padding-left: 0;">
+
+        <li th:each="article : ${articles}" style="padding: 10px 5px; border-bottom: 1px solid #eee;">
+
+            <a th:href="@{/kb/article/{id}(id=${article.articleId})}"
+               th:text="${article.title}"
+               style="text-decoration: none; color: #0056b3; font-weight: bold;">
+                Article Title
+            </a>
+
+            <div style="font-size: 0.9em; color: #666; padding-top: 4px;">
+                Category: <span th:text="${article.category}"></span>
+            </div>
+
+        </li>
+    </ul>
+</div>
+
 <footer>
     <div style="text-align: center;">
-        <p>&copy; 2024 UniHelpDesk. All rights reserved.</p>
+        <p>&copy; 2025 UniHelpDesk. All rights reserved.</p>
     </div>
 </footer>
 

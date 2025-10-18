@@ -128,6 +128,27 @@ GO
 
 -----------------------------------------------------------------------------------------------------------------
 
+-- Knowledge Base
+CREATE TABLE knowledge_base_articles (
+
+                                         article_id INT PRIMARY KEY IDENTITY(1,1),
+                                         title NVARCHAR(255) NOT NULL,
+                                         content NVARCHAR(MAX) NOT NULL,
+                                         author_id INT NOT NULL,
+                                         category VARCHAR(50) NOT NULL,
+                                         created_at DATETIME DEFAULT GETDATE(),
+                                         updated_at DATETIME,
+                                         FOREIGN KEY (author_id) REFERENCES users(user_id)
+);
+GO
+
+
+ALTER TABLE knowledge_base_articles
+    ADD CONSTRAINT CK_kb_category CHECK (category IN ('IT_Support', 'Academic_Support', 'Counseling_Support', 'General_Info'));
+GO
+
+----------------------------------------------------------------------------------------------------------------
+
 SELECT * FROM students;
 SELECT * FROM lecturers;
 SELECT * FROM support_staff;
@@ -137,6 +158,8 @@ SELECT * FROM modules;
 SELECT * FROM tickets;
 SELECT * FROM ticket_attachments;
 SELECT * FROM ticket_responses;
+
+SELECT * FROM knowledge_base_articles;
 
 SELECT * FROM users;
 

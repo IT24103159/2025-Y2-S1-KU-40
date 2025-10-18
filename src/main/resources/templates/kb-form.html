@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${pageTitle}">Article Form</title>
+</head>
+<body>
+<h1 th:text="${pageTitle}">Article Form</h1>
+
+<form method="post"
+      th:object="${articleDTO}"
+      th:with="formActionUrl=${articleDTO.articleId == null} ? '/kb/save' : '/kb/update'"
+      th:action="@{${formActionUrl}}">
+
+    <input type="hidden" th:if="${articleDTO.articleId != null}" th:field="*{articleId}" />
+
+    <div>
+        <label for="title">Title:</label>
+        <input type="text" id="title" th:field="*{title}" required>
+    </div>
+    <div>
+        <label for="category">Category:</label>
+        <select id="category" th:field="*{category}" required>
+            <option value="">Select Category</option>
+            <option value="IT_Support">IT Support</option>
+            <option value="Academic_Support">Academic Support</option>
+            <option value="Counseling_Support">Counseling Support</option>
+            <option value="General_Info">General Info</option>
+        </select>
+    </div>
+    <div>
+        <label for="content">Content:</label>
+        <textarea id="content" th:field="*{content}" rows="15" cols="80" required></textarea>
+    </div>
+
+    <button type="submit">Save Article</button>
+    <a th:href="@{/kb/manage}">Cancel</a>
+</form>
+</body>
+</html>
