@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Notification Bell</title>
+</head>
+<body>
+
+<div th:fragment="notificationBell" class="notification-container">
+
+    <style>
+        .notification-container {
+            position: relative;
+            display: inline-block;
+            margin: 0 15px; /* Updated margin */
+            vertical-align: middle; /* Align with other nav items */
+        }
+        .notification-bell-icon {
+            font-size: 22px; /* Adjusted font size for icon */
+            cursor: pointer;
+            color: #555; /* Standard icon color */
+            transition: color 0.3s ease;
+        }
+        .notification-bell-icon:hover {
+            color: #667eea; /* Theme accent color on hover */
+        }
+        .notification-count {
+            position: absolute;
+            top: -8px; /* Adjusted position */
+            right: -10px;
+            background-color: #e53935; /* Brighter red */
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 11px; /* Adjusted font size */
+            font-weight: bold;
+            border: 2px solid white; /* White border to stand out */
+        }
+        .notification-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 45px; /* More space from icon */
+            background-color: white; /* Theme card background */
+            min-width: 320px; /* Slightly wider */
+            max-height: 400px;
+            overflow-y: auto;
+            border: none; /* Removed old border */
+            border-radius: 15px; /* Theme card border-radius */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* Theme card shadow */
+            z-index: 1000;
+            padding-top: 8px; /* Padding inside the card */
+            padding-bottom: 8px;
+        }
+        .notification-dropdown-item {
+            padding: 12px 20px; /* Adjusted padding */
+            border-bottom: 1px solid #f0f4ff; /* Lighter, theme-aligned border */
+            text-decoration: none;
+            display: block;
+            color: #333;
+            transition: background-color 0.3s ease;
+        }
+        .notification-dropdown-item:last-child {
+            border-bottom: none; /* No border for the last item */
+        }
+        .notification-dropdown-item:hover {
+            background-color: #f8f9ff; /* Theme hover color */
+        }
+        .notification-dropdown-item-message {
+            font-size: 0.95rem;
+            color: #444;
+            font-weight: 500;
+        }
+        .notification-dropdown-item-time {
+            font-size: 0.8rem;
+            color: #667eea; /* Theme accent color */
+            margin-top: 4px;
+        }
+        .notification-empty {
+            padding: 20px;
+            text-align: center;
+            color: #777;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    </style>
+
+    <div id="notificationBellIcon" class="notification-bell-icon">
+        <i class="fas fa-bell"></i>
+
+        <span th:if="${unreadNotificationCount > 0}"
+              th:text="${unreadNotificationCount}"
+              class="notification-count"></span>
+    </div>
+
+    <div id="notificationDropdown" class="notification-dropdown">
+        <div id="notificationList">
+            <div class="notification-empty">Loading...</div>
+        </div>
+    </div>
+
+
+    <script th:inline="javascript">
+        // --- JavaScript එකේ කිසිම වෙනසක් කරලා නෑ ---
+        document.addEventListener("DOMContentLoaded", function() {
+
+            const bellIcon = document.getElementById("notificationBellIcon");
+            const dropdown = document.getElementById("notificationDropdown");
+            const notificationList = document.getElementById("notificationList");
+
+            bellIcon.addEventListener("click", function() {
+                const isHidden = dropdown.style.display === "none" || dropdown.style.display === "";
+                dropdown.style.display = isHidden ? "block" : "none";
+
+                if (isHidden) {
+                    loadNotifications();
+                }
+            });
+
+            window.addEventListener("click", function(event) {
+                if (!bellIcon.contains(event.target) && !dropdown.contains(event.target)) {
+                    dropdown.style.display = "none";
+                }
+            });
+
+            function loadNotifications() {
+                notificationList.innerHTML = '<div class="notification-empty">Loading...</div>';
+
+                fetch('/notifications/unread')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(notifications => {
+                        notificationList.innerHTML = "";
+
+                        if (notifications.length === 0) {
+                            notificationList.innerHTML = '<div class="notification-empty">No unread notifications.</div>';
+                        } else {
+                            notifications.forEach(notification => {
+                                const item = document.createElement('a');
+                                item.href = '/notifications/read/' + notification.notificationId;
+                                item.className = 'notification-dropdown-item';
+
+                                const message = document.createElement('div');
+                                message.className = 'notification-dropdown-item-message';
+                                message.textContent = notification.message;
+
+                                const time = document.createElement('div');
+                                time.className = 'notification-dropdown-item-time';
+                                time.textContent = new Date(notification.createdAt).toLocaleString();
+
+                                item.appendChild(message);
+                                item.appendChild(time);
+                                notificationList.appendChild(item);
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching notifications:', error);
+                        notificationList.innerHTML = '<div class="notification-empty" style="color: red;">Could not load notifications.</div>';
+                    });
+            }
+        });
+    </script>
+</div>
+
+</body>
+</html>

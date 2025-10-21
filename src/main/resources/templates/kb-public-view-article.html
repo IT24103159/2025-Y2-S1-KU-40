@@ -1,56 +1,213 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title th:text="${article.title}">View Article</title>
-  <style>
-    body { font-family: sans-serif; }
-    .container { max-width: 800px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
-    .article-meta { font-size: 0.9em; color: #555; }
-    .article-content { margin-top: 20px; white-space: pre-wrap;  }
-    .back-button { margin-top: 20px; padding: 10px 15px; background-color: #555; color: white; text-decoration: none; border-radius: 4px; }
-  </style>
+    <meta charset="UTF-8">
+    <title th:text="${article != null ? article.title : 'Article Not Found'}">View Article</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Global Styles (from previous theme) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Horizontally center content */
+            padding: 40px 20px; /* Add some padding */
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Page Container (White Card) */
+        .page-container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            max-width: 900px; /* Max width for the article */
+            width: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .page-container:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Header Style */
+        h1 {
+            color: #333;
+            text-align: left;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.3;
+        }
+
+        /* Article Metadata */
+        .article-meta {
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f8f9ff; /* Light blue/grey background */
+            border-left: 4px solid #667eea; /* Theme accent border */
+            border-radius: 8px;
+            display: flex;
+            flex-wrap: wrap; /* Allow items to wrap on small screens */
+            gap: 15px; /* Space between meta items */
+        }
+
+        .article-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px; /* Space between icon and text */
+        }
+
+        .article-meta span i {
+            color: #764ba2; /* Icon color from theme */
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background-color: #e0e0e0;
+            margin-bottom: 25px;
+        }
+
+        /* Article Content */
+        .article-content {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            color: #333;
+            line-height: 1.8;
+        }
+
+        /* This rule is important to respect formatting (like new lines) */
+        .article-content p {
+            white-space: pre-wrap;
+        }
+
+        /* Back Button */
+        .button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(102, 126, 234, 0.2);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px; /* Space for icon */
+            margin-top: 30px;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Not Found Message Style */
+        .not-found-message {
+            font-size: 1.1rem;
+            color: #c62828; /* Dark red */
+            font-weight: 500;
+            text-align: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 15px;
+            }
+            .page-container {
+                padding: 30px 25px;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .article-meta {
+                flex-direction: column; /* Stack meta items vertically */
+                gap: 10px;
+                align-items: flex-start;
+            }
+            .article-content {
+                font-size: 1rem;
+            }
+            .button {
+                width: 100%;
+                padding: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            .page-container {
+                padding: 25px 20px;
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="container" th:if="${article}">
-  <h1 th:text="${article.title}">Article Title</h1>
+
+<div class="page-container" th:if="${article}">
+    <h1 th:text="${article.title}">Article Title</h1>
 
     <div class="article-meta">
             <span>
+                <i class="fas fa-tags"></i>
                 <strong>Category:</strong>
                 <span th:text="${article.category}">Category</span>
-            </span> |
+            </span>
         <span>
+                <i class="fas fa-user-edit"></i>
                 <strong>Author:</strong>
                 <span th:text="${article.author.name}">Author Name</span>
-            </span> |
+            </span>
         <span>
+                <i class="fas fa-calendar-alt"></i>
                 <strong>Published on:</strong>
                 <span th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd')}">Date</span>
             </span>
-
         <span th:if="${article.updatedAt != null}">
-                |
+                <i class="fas fa-calendar-check"></i>
                 <strong>Last updated:</strong>
                 <span th:text="${#temporals.format(article.updatedAt, 'yyyy-MM-dd')}">Updated Date</span>
             </span>
     </div>
 
-  <hr>
+    <hr>
 
-  <div class="article-content">
-    <p th:text="${article.content}">Full article content goes here...</p>
-  </div>
+    <div class="article-content">
+        <p th:text="${article.content}">Full article content goes here...</p>
+    </div>
 
-  <br>
-  <a th:href="@{/}" class="back-button">Back to Home</a>
-
+    <br>
+    <a th:href="@{/}" class="button"><i class="fas fa-arrow-left"></i> Back to Home</a>
 </div>
 
-<div class="container" th:unless="${article}">
-  <h1>Article Not Found</h1>
-  <p>The article you are looking for does not exist.</p>
-  <a th:href="@{/}" class="back-button">Back to Home</a>
+<div class="page-container" th:unless="${article}">
+    <h1><i class="fas fa-exclamation-triangle" style="color: #c62828;"></i> Article Not Found</h1>
+    <p class="not-found-message">The article you are looking for does not exist.</p>
+    <a th:href="@{/}" class="button"><i class="fas fa-arrow-left"></i> Back to Home</a>
 </div>
+
 </body>
 </html>

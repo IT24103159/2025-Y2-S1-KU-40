@@ -30,6 +30,14 @@ public class TicketServiceImpl implements TicketService {
     @Autowired private EncryptionService encryptionService;
     @Autowired private UserService userService;
 
+    // ================================================================
+    //         ## Observer Pattern එකට අවශ්‍ය Services ##
+    // ================================================================
+    @Autowired
+    private NotificationService notificationService;
+    @Autowired
+    private SupportStaffRepository supportStaffRepository;
+    // ================================================================
 
 
     @Override
@@ -47,7 +55,21 @@ public class TicketServiceImpl implements TicketService {
             ticket.setModule(module);
         }
 
-        Ticket savedTicket = ticketRepository.save(ticket);
+        Ticket savedTicket = ticketRepository.save(ticket); // Ticket එක save කරනවා
+
+        // ================================================================
+        //         ## OBSERVER PATTERN: NOTIFY OBSERVERS (Help Desk) ##
+        // ================================================================
+        // Help Desk එකේ staff ලා හොයනවා
+        List<User> helpDeskStaff = userService.findStaffByType("Help_Desk");
+        String message = "A new " + savedTicket.getCategory() + " ticket (#" + savedTicket.getTicketId() + ") has been received.";
+        String link = "/help-desk/ticket/view/" + savedTicket.getTicketId();
+
+        // Help Desk එකේ හැමෝටම notification එකක් යවනවා
+        for (User staff : helpDeskStaff) {
+            notificationService.createNotification(staff, message, link);
+        }
+        // ================================================================
 
 
         if (ticketDTO.getAttachments() != null && ticketDTO.getAttachments().length > 0) {
@@ -132,6 +154,16 @@ public class TicketServiceImpl implements TicketService {
         response.setResponder(officer);
         response.setResponseMessage(responseMessage);
         responseRepository.save(response);
+
+        // ================================================================
+        //         ## OBSERVER PATTERN: NOTIFY OBSERVER (Student) ##
+        // ================================================================
+        User student = ticket.getStudent(); // Student ව හොයාගන්නවා
+        String message = "Your ticket #" + ticket.getTicketId() + " has a new response from " + officer.getName() + ".";
+        String link = "/student/ticket/view/" + ticket.getTicketId(); // Student ගේ link එක
+
+        notificationService.createNotification(student, message, link);
+        // ================================================================
     }
 
     @Override
@@ -146,6 +178,36 @@ public class TicketServiceImpl implements TicketService {
         ticket.setStatus("Assigned");
         ticket.setAssignedTo(assignedUser);
         ticketRepository.save(ticket);
+
+        // ================================================================
+        //         ## OBSERVER PATTERN: NOTIFY OBSERVER (Assigned Staff) ##
+        // ================================================================
+
+        String message = "Ticket #" + ticket.getTicketId() + " has been assigned to you by " + officer.getName() + ".";
+        String link = "";
+
+        // Staff ගේ Role එක අනුව අදාළ link එක හදනවා
+        if (assignedUser.getRole().equals("Lecturer")) {
+            link = "/lecturer/ticket/view/" + ticket.getTicketId();
+        } else if (assignedUser.getRole().equals("Staff")) {
+            SupportStaff staff = supportStaffRepository.findById(assignedUser.getUserId()).orElse(null);
+            if (staff != null) {
+                switch (staff.getStaffType()) {
+                    case "IT_Support":
+                        link = "/it-support/ticket/view/" + ticket.getTicketId();
+                        break;
+                    case "Counselor":
+                        link = "/counselor/ticket/view/" + ticket.getTicketId();
+                        break;
+                }
+            }
+        }
+
+        // අදාළ staff member ට notification එක යවනවා
+        if (!link.isEmpty()) {
+            notificationService.createNotification(assignedUser, message, link);
+        }
+        // ================================================================
     }
 
     @Override
@@ -182,7 +244,7 @@ public class TicketServiceImpl implements TicketService {
                 .filter(ticket -> "Assigned".equals(ticket.getStatus()))
                 .collect(Collectors.toList());
 
-        // --- DEBUGGING ---
+        // --- DEBUGKING ---
         System.out.println("DEBUG: Found " + tickets.size() + " tickets with 'Assigned' status for this user.");
 
         return tickets.stream().map(ticket -> new TicketListDTO(
@@ -213,6 +275,23 @@ public class TicketServiceImpl implements TicketService {
         response.setResponder(staffMember);
         response.setResponseMessage(responseMessage);
         responseRepository.save(response);
+
+        // ================================================================
+        //         ## OBSERVER PATTERN: NOTIFY OBSERVER (Student) ##
+        // ================================================================
+        User student = ticket.getStudent();
+        String message;
+
+        // Counseling ticket එකක් නම්, message එක වෙනස් කරනවා
+        if ("Counseling_Support".equals(ticket.getCategory())) {
+            message = "You have received a new confidential response for ticket #" + ticket.getTicketId() + ".";
+        } else {
+            message = "Your ticket #" + ticket.getTicketId() + " has a new response from " + staffMember.getName() + ".";
+        }
+
+        String link = "/student/ticket/view/" + ticket.getTicketId();
+        notificationService.createNotification(student, message, link);
+        // ================================================================
     }
 
     @Transactional
@@ -238,7 +317,17 @@ public class TicketServiceImpl implements TicketService {
 
         ticket.setAssignedTo(assignedCounselor);
 
-        ticketRepository.save(ticket);
+        // ticketId එක auto-generate වෙන නිසා, save කරපුවම ඒක අරගන්න ඕන
+        Ticket savedTicket = ticketRepository.save(ticket);
+
+        // ================================================================
+        //         ## OBSERVER PATTERN: NOTIFY OBSERVER (Counselor) ##
+        // ================================================================
+        String message = "A new confidential ticket (#" + savedTicket.getTicketId() + ") has been assigned to you.";
+        String link = "/counselor/ticket/view/" + savedTicket.getTicketId(); // Counselor ගේ link එක
+
+        notificationService.createNotification(assignedCounselor, message, link);
+        // ================================================================
     }
 
     @Override
@@ -257,7 +346,8 @@ public class TicketServiceImpl implements TicketService {
         if ("Counseling_Support".equals(ticket.getCategory())) {
             responseMessage = encryptionService.encrypt(responseMessage);
         }
-        addResponseByStaff(ticketId, responseMessage, staffMember); // Call original method
+        // මේක call කරාම, addResponseByStaff ඇතුළේ තියෙන notification logic එකත් run වෙනවා
+        addResponseByStaff(ticketId, responseMessage, staffMember);
     }
 
     @Override

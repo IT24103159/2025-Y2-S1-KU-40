@@ -3,37 +3,258 @@
 <head>
     <meta charset="UTF-8">
     <title>Manage Knowledge Base</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Global Styles (from previous theme) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Horizontally center content */
+            padding: 40px 20px; /* Add some padding */
+        }
+
+        /* Page Container */
+        .page-container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            max-width: 1000px; /* Wider container for table */
+            width: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .page-container:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Header Style */
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Alert Message Styles */
+        .alert {
+            width: 100%;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            border: 1px solid transparent;
+        }
+
+        .alert-success {
+            background-color: #e8f5e9; /* Light green */
+            color: #2e7d32; /* Dark green */
+            border-color: #a5d6a7;
+        }
+
+        .alert-error {
+            background-color: #ffebee; /* Light red */
+            color: #c62828; /* Dark red */
+            border-color: #ef9a9a;
+        }
+
+        /* Button Styles */
+        .button, .action-link {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(102, 126, 234, 0.2);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px; /* Space for icon */
+        }
+
+        .button:hover, .action-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .add-button-container {
+            margin-bottom: 25px;
+            text-align: right; /* Align button to the right */
+        }
+
+        /* Table Styles */
+        .content-table {
+            width: 100%;
+            border-collapse: collapse; /* Clean look */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            overflow: hidden; /* For border-radius to work on table */
+        }
+
+        .content-table thead tr {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: left;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .content-table th,
+        .content-table td {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .content-table tbody tr {
+            background-color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .content-table tbody tr:hover {
+            background-color: #f8f9ff; /* Light hover effect */
+        }
+
+        .content-table tbody tr:last-of-type {
+            border-bottom: none; /* No border for the last row */
+        }
+
+        .content-table td:last-child {
+            display: flex;
+            gap: 15px; /* Space between links */
+        }
+
+        .content-table .empty-row td {
+            text-align: center;
+            color: #777;
+            font-style: italic;
+            padding: 30px;
+            background: #fdfdfd;
+        }
+
+        /* Action Link Styles (Edit/Delete) */
+        .action-link {
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            text-decoration: none;
+        }
+
+        .action-link.edit {
+            /* Uses the default gradient */
+        }
+
+        .action-link.delete {
+            background: linear-gradient(135deg, #e53935 0%, #b71c1c 100%); /* Red gradient for delete */
+            box-shadow: 0 4px 6px rgba(229, 57, 53, 0.2);
+        }
+
+        .action-link.delete:hover {
+            box-shadow: 0 6px 12px rgba(229, 57, 53, 0.3);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+            .page-container {
+                padding: 25px;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .add-button-container {
+                text-align: center;
+            }
+            .button {
+                width: 100%;
+            }
+
+            /* Responsive Table - Horizontal Scroll */
+            .table-wrapper {
+                overflow-x: auto; /* Allow horizontal scrolling */
+            }
+            .content-table {
+                min-width: 600px; /* Force table to be at least 600px wide */
+            }
+            .content-table th,
+            .content-table td {
+                padding: 12px 15px;
+            }
+            .content-table td:last-child {
+                flex-direction: column; /* Stack Edit/Delete buttons */
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            .page-container {
+                padding: 20px 15px;
+            }
+        }
+    </style>
 </head>
 <body>
-<h1>Manage Your Articles</h1>
 
-<div th:if="${successMessage}" style="color: green;"><p th:text="${successMessage}"></p></div>
-<div th:if="${errorMessage}" style="color: red;"><p th:text="${errorMessage}"></p></div>
+<div class="page-container">
+    <h1>Manage Your Articles</h1>
 
-<a th:href="@{/kb/new}"><button>Add New Article</button></a>
+    <div th:if="${successMessage}" class="alert alert-success">
+        <p th:text="${successMessage}"></p>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-error">
+        <p th:text="${errorMessage}"></p>
+    </div>
 
-<table>
-    <thead>
-    <tr>
-        <th>Title</th>
-        <th>Category</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="article : ${articles}">
-        <td th:text="${article.title}">My Article Title</td>
-        <td th:text="${article.category}">IT_Support</td>
-        <td>
-            <a th:href="@{/kb/edit/{id}(id=${article.articleId})}">Edit</a>
-            |
-            <a th:href="@{/kb/delete/{id}(id=${article.articleId})}" onclick="return confirm('Are you sure you want to delete this article?');">Delete</a>
-        </td>
-    </tr>
-    <tr th:if="${articles.isEmpty()}">
-        <td colspan="3">You have not created any articles yet.</td>
-    </tr>
-    </tbody>
-</table>
+    <div class="add-button-container">
+        <a th:href="@{/kb/new}" class="button"><i class="fas fa-plus-circle"></i> Add New Article</a>
+    </div>
+
+    <div class="table-wrapper"> <table class="content-table">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="article : ${articles}">
+            <td th:text="${article.title}">My Article Title</td>
+            <td th:text="${article.category}">IT_Support</td>
+            <td>
+                <a th:href="@{/kb/edit/{id}(id=${article.articleId})}" class="action-link edit"><i class="fas fa-edit"></i> Edit</a>
+                <a th:href="@{/kb/delete/{id}(id=${article.articleId})}" class="action-link delete" onclick="return confirm('Are you sure you want to delete this article?');"><i class="fas fa-trash-alt"></i> Delete</a>
+            </td>
+        </tr>
+        <tr th:if="${articles.isEmpty()}" class="empty-row">
+            <td colspan="3">You have not created any articles yet.</td>
+        </tr>
+        </tbody>
+    </table>
+    </div>
+</div>
+
 </body>
 </html>

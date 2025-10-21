@@ -3,96 +3,343 @@
 <head>
     <meta charset="UTF-8">
     <title>View Assigned Ticket</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: sans-serif; line-height: 1.6; }
-        .container { max-width: 800px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
-        h1, h2, h3 { border-bottom: 2px solid #4CAF50; padding-bottom: 5px; }
-        .details-grid { display: grid; grid-template-columns: 150px 1fr; gap: 10px; margin-bottom: 20px; }
-        .details-grid strong { font-weight: bold; }
-        .message-box { background-color: #f9f9f9; border: 1px solid #eee; padding: 15px; border-radius: 4px; white-space: pre-wrap; }
-        form { background-color: #f2f2f2; padding: 15px; border-radius: 4px; }
-        textarea { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; }
-        button { padding: 10px 15px; background-color: #4CAF50; color: white; border: none; cursor: pointer; border-radius: 4px; }
-        button:hover { background-color: #45a049; }
-        .attachment-list a { display: block; margin-bottom: 5px; }
+        /* Theme Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 40px 20px;
+        }
+
+        /* --- Content Container --- */
+        .ticket-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            border-top: 5px solid #764ba2; /* Theme Accent */
+        }
+
+        .ticket-container:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        /* --- Titles --- */
+        h1 {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h2, h3 {
+            color: #444;
+            font-size: 1.5rem;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- Details Grid --- */
+        .details-grid {
+            /* 4 columns: Key, Value, Key, Value */
+            display: grid;
+            grid-template-columns: 180px 1fr 180px 1fr;
+            gap: 15px 25px;
+            margin-bottom: 30px;
+            background-color: #f8f9ff; /* Light accent background */
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .details-grid strong {
+            font-weight: 600;
+            color: #333;
+            /* Added theme color for key labels */
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .details-grid span {
+            color: #555;
+            font-weight: 500;
+        }
+
+        /* Divider for grid rows */
+        .details-grid hr {
+            grid-column: 1 / -1;
+            border: none;
+            border-top: 1px solid #dcdcdc;
+            margin: 5px 0;
+        }
+
+        /* Ensures the Subject and Module span correctly when one is hidden */
+        .details-grid th\:block {
+            display: contents; /* Ensures the th:block doesn't disrupt grid flow */
+        }
+
+        /* Fallback message style */
+        .not-found-message {
+            color: #dc3545;
+            padding: 15px;
+            border: 1px solid #f5c6cb;
+            background-color: #f8d7da;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        /* --- Message Box --- */
+        .message-box {
+            background-color: #ffffff;
+            border: 1px solid #dcdcdc;
+            padding: 20px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .message-box p {
+            color: #444;
+            font-size: 1rem;
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        /* --- Response Form --- */
+        .response-form {
+            background-color: #f2f2f2;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            margin-top: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+            min-height: 150px;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
+        }
+
+        /* --- Buttons --- */
+        .theme-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(102, 126, 234, 0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .back-button-link {
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 30px;
+        }
+
+        .back-button {
+            /* Used for the dark gray back button */
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%) !important;
+            box-shadow: 0 4px 6px rgba(108, 117, 125, 0.2);
+        }
+
+        .back-button:hover {
+            box-shadow: 0 6px 12px rgba(108, 117, 125, 0.3);
+        }
+
+        /* --- Attachments --- */
+        .attachment-list {
+            padding: 10px;
+            border: 1px dashed #ccc;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .attachment-list a {
+            color: #667eea;
+            text-decoration: none;
+            padding: 5px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+
+        .attachment-list a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        /* --- Responsive Adjustments --- */
+        @media (max-width: 768px) {
+            .ticket-container {
+                padding: 30px 20px;
+                margin: 0;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .details-grid {
+                grid-template-columns: 1fr; /* Single column layout on mobile */
+                gap: 10px;
+            }
+            /* Reset column spans for mobile */
+            .details-grid > * {
+                grid-column: 1 / -1;
+            }
+            .details-grid strong {
+                display: block;
+                margin-bottom: 5px;
+            }
+            .details-grid hr {
+                display: none; /* Hide dividers in single column */
+            }
+            .theme-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>Ticket Details</h1>
+<div class="ticket-container">
+    <h1><i class="fas fa-tools"></i> Ticket Details</h1>
 
     <div th:if="${ticket != null}">
+        <h2><i class="fas fa-info-circle"></i> Ticket Information</h2>
 
         <div class="details-grid">
+
             <strong>Ticket ID:</strong>
-            <span th:text="${ticket.ticketId}"></span>
+            <span th:text="${ticket.ticketId}">TKT-0001</span>
 
             <strong>Submitted At:</strong>
-            <span th:text="${#temporals.format(ticket.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+            <span th:text="${#temporals.format(ticket.createdAt, 'yyyy-MM-dd HH:mm')}">2023-10-20 10:30</span>
 
             <strong>Status:</strong>
-            <span th:text="${ticket.status}"></span>
+            <span th:text="${ticket.status}">Open</span>
 
             <hr style="grid-column: 1 / -1;"/>
 
             <strong>Student ID:</strong>
-            <span th:text="${ticket.studentUniversityId}"></span>
+            <span th:text="${ticket.studentUniversityId}">S001</span>
 
             <strong>Student Name:</strong>
-            <span th:text="${ticket.studentName}"></span>
+            <span th:text="${ticket.studentName}">John Doe</span>
 
             <strong>Student Email:</strong>
-            <span th:text="${ticket.studentEmail}"></span>
+            <span th:text="${ticket.studentEmail}">john.doe@uni.lk</span>
 
             <strong>Faculty:</strong>
-            <span th:text="${ticket.studentFaculty}"></span>
+            <span th:text="${ticket.studentFaculty}">Computing</span>
 
             <strong>Contact Number:</strong>
-            <span th:text="${ticket.contactNumber}"></span>
+            <span th:text="${ticket.contactNumber}">+94771234567</span>
 
             <hr style="grid-column: 1 / -1;"/>
 
             <strong>Category:</strong>
-            <span th:text="${ticket.category}"></span>
+            <span th:text="${ticket.category}">IT_Support</span>
 
             <th:block th:if="${ticket.category == 'Academic_Support'}">
                 <strong>Module:</strong>
-                <span th:text="${ticket.moduleName}"></span>
+                <span th:text="${ticket.moduleName}">Module Name Here</span>
             </th:block>
 
             <strong>Subject:</strong>
-            <span th:text="${ticket.subject}"></span>
+            <span th:text="${ticket.subject}">PC not connecting to Wi-Fi</span>
         </div>
 
-        <h3>Message</h3>
+        <h3><i class="fas fa-comment-dots"></i> User Message</h3>
         <div class="message-box">
             <p th:text="${ticket.message}"></p>
         </div>
 
         <div th:if="${not #lists.isEmpty(ticket.attachments)}">
-            <h3>Attachments</h3>
+            <h3><i class="fas fa-paperclip"></i> Attachments</h3>
             <div class="attachment-list">
                 <div th:each="att : ${ticket.attachments}">
-                    <a th:href="@{/files/download/{filename}(filename=${att.filePath})}" th:text="${att.fileName}">Download Attachment</a>
+                    <a th:href="@{/files/download/{filename}(filename=${att.filePath})}">
+                        <i class="fas fa-download"></i>
+                        <span th:text="${att.fileName}">Download Attachment</span>
+                    </a>
                 </div>
             </div>
         </div>
         <hr>
 
-        <h2>Respond to Ticket</h2>
-        <form th:action="@{/it-support/ticket/respond}" method="post">
+        <h2><i class="fas fa-reply"></i> Respond to Ticket</h2>
+
+        <form th:action="@{/it-support/ticket/respond}" method="post" class="response-form">
             <input type="hidden" name="ticketId" th:value="${ticket.ticketId}" />
-            <textarea name="responseMessage" placeholder="Type your response to the student..." required rows="5"></textarea>
-            <button type="submit">Send Response</button>
+
+            <textarea name="responseMessage"
+                      placeholder="Type your response to the student..."
+                      required rows="7"></textarea>
+
+            <button type="submit" class="theme-button">
+                <i class="fas fa-paper-plane"></i> Send Response
+            </button>
         </form>
     </div>
 
-    <div th:if="${ticket == null}">
-        <p>Could not find ticket details. Please go back and try again.</p>
+    <div th:if="${ticket == null}" class="not-found-message">
+        <p><i class="fas fa-exclamation-triangle"></i> Could not find ticket details. Please go back and try again.</p>
     </div>
 
-    <br>
-    <a th:href="@{/it-support/tickets}"><button style="background-color: #555;">Back to Ticket List</button></a>
+    <a th:href="@{/it-support/tickets}" class="back-button-link">
+        <button type="button" class="theme-button back-button">
+            <i class="fas fa-arrow-circle-left"></i> Back to Ticket List
+        </button>
+    </a>
 </div>
 </body>
 </html>

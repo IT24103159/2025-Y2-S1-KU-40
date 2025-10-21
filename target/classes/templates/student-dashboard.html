@@ -337,13 +337,13 @@
 <!-- Header -->
 <div class="header">
     <div class="header-brand">
-        <h1>UniHelpDesk</h1>
+        <a th:href="@{/}" style="text-decoration: none;">
+            <h1>UniHelpDesk</h1>
+        </a>
     </div>
     <div class="header-nav">
-        <a th:href="@{/student/dashboard}" class="nav-button">Dashboard</a>
-        <a th:href="@{/student/my-tickets}" class="nav-button">My Tickets</a>
-        <a th:href="@{/student/support}" class="nav-button">Get Help</a>
-        <a href="index.html" class="nav-button">Logout</a>
+        <div th:replace="~{fragments/_notification-bell :: notificationBell}"></div>
+        <a th:href="@{/login}" class="nav-button">Logout</a>
     </div>
 </div>
 
@@ -399,7 +399,18 @@
                 <h3><i class="fas fa-history"></i> Ticket History</h3>
                 <p>View your previous support requests and check their status</p>
                 <a th:href="@{/student/my-tickets}"><button>My Tickets</button></a>
-            </div>
+            </div >
+
+
+            <div class="action-card">
+                <h3><i class="fas fa-bell"></i> Notifications</h3>
+                <p></p>
+                <a th:href="@{/notifications/history}"><button>View All Notifications</button></a>
+            </div >
+
+
+
+            <br><br>
         </div>
     </div>
 </div>

@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UniHelpDesk</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Global Styles */
         * {
             margin: 0;
             padding: 0;
@@ -15,12 +17,13 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             color: #333;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); /* Main body background gradient */
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
+        /* --- Header --- */
         header {
             background: white;
             padding: 1.5rem 2rem;
@@ -28,10 +31,13 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         header h3 {
-            display: inline-block;
+            margin: 0;
         }
 
         header h3 a {
@@ -39,7 +45,7 @@
             text-decoration: none;
             font-size: 1.8rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Theme gradient text */
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             transition: all 0.3s ease;
@@ -49,12 +55,8 @@
             transform: translateY(-2px);
         }
 
-        nav {
-            float: right;
-        }
-
         nav button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Theme gradient button */
             color: white;
             border: none;
             padding: 10px 20px;
@@ -70,38 +72,147 @@
             box-shadow: 0 6px 12px rgba(102, 126, 234, 0.3);
         }
 
-        hr {
-            border: none;
-            height: 1px;
-            background: linear-gradient(to right, transparent, #e1e5e9, transparent);
-            margin: 1rem 0;
-            clear: both;
-        }
-
+        /* --- Main Content Area --- */
         main {
             flex: 1;
-            padding: 3rem 2rem;
             max-width: 1200px;
             margin: 0 auto;
             width: 100%;
+            padding: 3rem 2rem; /* Consistent padding for main content */
         }
 
-        section {
-            background: white;
-            padding: 3rem;
+        /* --- Hero Section (Minimalist) --- */
+        .hero-section-minimal {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #e0e7ff 0%, #fff 100%);
+            padding: 60px 20px 30px 20px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-section-minimal h1 {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            font-weight: 800;
+            line-height: 1.2;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-section-minimal p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            line-height: 1.5;
+            max-width: 800px;
+            text-align: center;
+            color: #555;
+        }
+
+
+
+        .hero-button {
+            background: linear-gradient(135deg, #ff9900 0%, #ff7043 100%); /* Orange accent button */
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(255, 112, 67, 0.3);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hero-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(255, 112, 67, 0.4);
+        }
+
+
+
+        /* --- NEW: Image and Description Section (Split Layout) --- */
+        .info-section-split {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            margin-bottom: 50px;
+            padding: 40px;
+            background: #fff;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            margin-bottom: 2rem;
-            transition: transform 0.3s ease;
+            border: 1px solid #e0e7ff;
+
+
         }
 
-        section:hover {
-            transform: translateY(-5px);
+        .info-image-container {
+            flex: 0 0 40%; /* රූපය සඳහා 40% ඉඩක් වෙන් කිරීම */
+            max-width: 40%;
+            text-align: center;
         }
 
-        h2 {
+        .info-image-container img {
+            max-width: 100%;
+            height: auto;
+
+        }
+
+        .info-content-container {
+            flex: 1; /* ඉතිරි 60% ඉඩ content සඳහා */
+        }
+
+        .section-title-left {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            color: #444;
+            /* Theme gradient line for emphasis */
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            display: inline-block; /* border-bottom එක title එකට පමණක් සීමා කිරීමට */
+        }
+
+        .info-content-container p {
+            margin-bottom: 15px;
+            color: #555;
+            font-size: 1.05rem;
+        }
+
+        .read-more-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #f4f5f9;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: background 0.3s ease, color 0.3s ease;
+            border: 1px solid #e0e7ff;
+        }
+
+        .read-more-button:hover {
+            background: #667eea;
+            color: white;
+        }
+
+
+        /* --- Section Titles --- */
+        .section-title {
             color: #333;
-            margin-bottom: 1.5rem;
+            margin-bottom: 30px;
             font-size: 2.2rem;
             text-align: center;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -109,15 +220,145 @@
             -webkit-text-fill-color: transparent;
         }
 
-        p {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: #555;
-            text-align: justify;
-            max-width: 800px;
-            margin: 0 auto;
+        /* --- Category Cards --- */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+            padding: 0 10px; /* Small padding for grid */
         }
 
+        .category-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid #e0e7ff;
+            text-decoration: none; /* Make card clickable */
+            display: block; /* Make card act as a block link */
+            color: #333;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+            border-color: #667eea;
+            color: #667eea; /* Change text color on hover */
+        }
+
+        .category-card .icon {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .category-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .category-card p {
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        /* --- Knowledge Base List --- */
+        .kb-section {
+            margin-top: 40px; /* Space after categories */
+        }
+
+        .kb-section > p { /* Styling for the intro paragraph of KB */
+            text-align: center;
+            font-size: 1.1rem;
+            color: #555;
+            max-width: 800px;
+            margin: 0 auto 30px auto;
+        }
+
+
+        .kb-list {
+            list-style-type: none;
+            padding-left: 0;
+            margin-top: 20px;
+        }
+
+        .kb-item {
+            background: white;
+            padding: 20px 25px;
+            border: 1px solid #e0e7ff;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .kb-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.15);
+            border-color: #667eea;
+        }
+
+        .kb-item-content a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+            font-size: 1.15rem;
+            transition: color 0.3s ease;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .kb-item-content a:hover {
+            color: #667eea;
+        }
+
+        .kb-meta {
+            font-size: 0.9em;
+            color: #555;
+            background: #f4f5f9;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .kb-icon {
+            color: #667eea;
+            font-size: 1.2rem;
+            margin-left: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .kb-item:hover .kb-icon {
+            transform: translateX(5px);
+        }
+
+        .kb-empty {
+            text-align: center;
+            font-style: italic;
+            color: #777;
+            padding: 30px;
+            background: #fdfdfd;
+            border-radius: 10px;
+        }
+
+        .view-all-button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        /* --- Footer --- */
         footer {
             background: white;
             padding: 2rem;
@@ -125,54 +366,119 @@
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
         }
 
-        footer div {
-            text-align: center;
-        }
-
         footer p {
             color: #777;
             text-align: center;
+            font-size: 1rem;
         }
 
-        /* Responsive design */
+        /* --- Responsive design --- */
+        @media (max-width: 992px) {
+            .hero-section-minimal h1 {
+                font-size: 3rem;
+            }
+            .hero-section-minimal p {
+                font-size: 1.2rem;
+            }
+        }
+
         @media (max-width: 768px) {
             header {
                 padding: 1rem;
+                flex-direction: column;
+                gap: 10px;
             }
-
             header h3 a {
                 font-size: 1.5rem;
             }
-
+            nav {
+                width: 100%;
+            }
+            nav button {
+                width: 100%;
+            }
             main {
-                padding: 2rem 1rem;
+                padding: 2rem 1rem; /* Adjust padding for main */
             }
-
-            section {
-                padding: 2rem 1.5rem;
+            .hero-section-minimal {
+                padding: 60px 15px;
+                border-radius: 10px; /* Keep some border-radius */
             }
-
-            h2 {
+            .hero-section-minimal h1 {
+                font-size: 2.5rem;
+            }
+            .hero-section-minimal p {
+                font-size: 1rem;
+            }
+            .search-input {
+                padding: 12px 15px;
+                font-size: 1rem;
+            }
+            .hero-button {
+                width: 100%;
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+            .section-title {
                 font-size: 1.8rem;
+            }
+            .category-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .category-card {
+                padding: 25px;
+            }
+            .category-card h3 {
+                font-size: 1.3rem;
+            }
+            .kb-section > p {
+                font-size: 1rem;
+            }
+            .kb-item {
+                padding: 15px;
+            }
+            .kb-item-content a {
+                font-size: 1.05rem;
+            }
+            .kb-icon {
+                font-size: 1rem;
+                margin-left: 10px;
+            }
+
+            /* Responsive Adjustments for new section */
+            .info-section-split {
+                flex-direction: column; /* Vertical stack on smaller screens */
+                padding: 20px;
+            }
+
+            .info-image-container {
+                flex: none;
+                max-width: 100%;
+                order: 1; /* Image first on mobile, or keep it last if preferred */
+            }
+
+            .info-content-container {
+                order: 2;
+            }
+
+            .section-title-left {
+                font-size: 1.6rem;
+                text-align: center;
+                border-bottom: none; /* Remove border on small screens if cluttered */
+                padding-bottom: 0;
             }
         }
 
         @media (max-width: 480px) {
-            header {
-                text-align: center;
+            .hero-section-minimal h1 {
+                font-size: 2rem;
             }
-
-            nav {
-                float: none;
-                margin-top: 1rem;
+            .hero-section-minimal p {
+                font-size: 0.9rem;
             }
-
-            h2 {
+            .section-title {
                 font-size: 1.6rem;
-            }
-
-            p {
-                font-size: 1rem;
             }
         }
     </style>
@@ -180,51 +486,94 @@
 <body>
 
 <header>
-    <h3 style="display: inline;"><a href="index.html">UniHelpDesk</a></h3>
-    <nav style="float: right;">
+    <h3><a th:href="@{/}">UniHelpDesk</a></h3>
+    <nav>
         <a th:href="@{/login}"><button>Login</button></a>
     </nav>
-    <hr style="clear: both;">
 </header>
 
 <main>
-    <section>
-        <h2 style="text-align: center;">Welcome to the University's Help Center</h2>
-        <p style="text-align: justify;">
-            Our UniHelpDesk website aims to provide quick solutions for common issues faced by university students. If you have academic, administrative, or other problems, please don't hesitate to contact us.
-        </p>
+    <section class="hero-section-minimal">
+        <h1>Welcome to UniHelpDesk</h1>
+        <p>Your dedicated support center for university life. Find the answers you need, from IT support to academic advice and counseling services, right here.</p>
+        <a th:href="@{/login}" class="hero-button">
+            <i class="fas fa-ticket-alt"></i> Can't find an answer? Submit a Ticket
+        </a>
+    </section>
+
+    <section class="info-section-split">
+        <div class="info-image-container">
+            <img th:src="@{/images/Gemini_Generated_Image_f4t0anf4t0anf4t0.png}"
+                 alt="University Help Desk Staff assisting students" />
+        </div>
+        <div class="info-content-container">
+            <h2 class="section-title-left">University Help Desk: Your Campus Support</h2>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque volutpat lobortis felis eget tempor. Curabitur turpis dui, volutpat eget urna at, vestibulum rutrum lectus. Phasellus a ullamcorper nisl. Quisque ex magna, venenatis at nibh in, egestas viverra dolor. Donec tempus, lectus auctor accumsan malesuada, orci mi gravida odio, ac semper lorem magna id eros. Curabitur egestas est in elit pretium elementum. Nulla ut erat quis nisl ornare mattis. Proin porta eget ipsum sollicitudin pretium.
+            </p>
+            <p>
+                Maecenas tincidunt sem quis est iaculis, quis hendrerit arcu sollicitudin. Proin in sodales ipsum, sed imperdiet leo. Phasellus eleifend, odio ut cursus interdum, velit dui sollicitudin libero, nec commodo ligula ipsum vitae nulla. Nullam velit porta tortor, at tempor mi. Aenean mauris mauris, rhoncus dictum enim eu, fringilla faucibus libero. Morbi non porttitor nibh.
+            </p>
+
+        </div>
+    </section>
+    <h2 class="section-title"><i class="fas fa-th-large"></i> Services</h2>
+    <div class="category-grid">
+        <a th:href="@{#}" class="category-card">
+            <div class="icon"><i class="fas fa-desktop"></i></div>
+            <h3>IT Support</h3>
+            <p>Technical issues, network, software, and account assistance.</p>
+        </a>
+        <a th:href="@{#}" class="category-card">
+            <div class="icon"><i class="fas fa-book-open"></i></div>
+            <h3>Academic Support</h3>
+            <p>Study guides, course info, assignments, and exam help.</p>
+        </a>
+        <a th:href="@{#}" class= "category-card">
+        <div class="icon"><i class="fas fa-hand-holding-heart"></i></div>
+        <h3>Counseling & Wellness</h3>
+        <p>Mental health, well-being, and personal development advice.</p>
+        </a>
+        <a th:href="@{#}" class="category-card">
+            <div class="icon"><i class="fas fa-info-circle"></i></div>
+            <h3>General Info</h3>
+            <p>Admissions, registration, fees, and campus information.</p>
+        </a>
+    </div>
+
+    <section class="kb-section">
+        <h2 class="section-title"> Knowledge Base</h2>
+        <p>Stay updated with our newest articles and guides designed to help you succeed.</p>
+
+        <div th:if="${articles.isEmpty()}">
+            <p class="kb-empty">No articles found in the Knowledge Base yet.</p>
+        </div>
+
+        <div th:unless="${articles.isEmpty()}">
+            <ul class="kb-list">
+                <li th:each="article : ${articles}" class="kb-item">
+                    <div class="kb-item-content">
+                        <a th:href="@{/kb/article/{id}(id=${article.articleId})}"
+                           th:text="${article.title}">
+                            Article Title
+                        </a>
+                        <div class="kb-meta">
+                            <i class="fas fa-tag"></i>
+                            Category: <span th:text="${article.category}"></span>
+                        </div>
+                    </div>
+                    <div class="kb-icon">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
     </section>
 </main>
 
-<br>
-<hr>
-
-<hr>
-<h2>Knowledge Base</h2>
-<div th:if="${articles.isEmpty()}">
-    <p>No articles found in the Knowledge Base yet.</p>
-</div>
-<div th:unless="${articles.isEmpty()}">
-    <ul style="list-style-type: none; padding-left: 0;">
-
-        <li th:each="article : ${articles}" style="padding: 10px 5px; border-bottom: 1px solid #eee;">
-
-            <a th:href="@{/kb/article/{id}(id=${article.articleId})}"
-               th:text="${article.title}"
-               style="text-decoration: none; color: #0056b3; font-weight: bold;">
-                Article Title
-            </a>
-
-            <div style="font-size: 0.9em; color: #666; padding-top: 4px;">
-                Category: <span th:text="${article.category}"></span>
-            </div>
-
-        </li>
-    </ul>
-</div>
-
 <footer>
-    <div style="text-align: center;">
+    <div>
         <p>&copy; 2025 UniHelpDesk. All rights reserved.</p>
     </div>
 </footer>

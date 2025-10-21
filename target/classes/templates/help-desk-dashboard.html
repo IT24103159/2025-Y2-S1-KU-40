@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Help Desk Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Theme Global Styles */
         * {
             margin: 0;
             padding: 0;
@@ -50,6 +52,7 @@
         .header-nav {
             display: flex;
             gap: 15px;
+            align-items: center; /* FIX: Align items vertically (bell and button) */
         }
 
         .nav-button {
@@ -71,6 +74,45 @@
             box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
         }
 
+        /* --- Notification Bell Styling (Required for the fragment) --- */
+        .notification-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .notification-icon {
+            color: #667eea; /* Theme color */
+            font-size: 1.5rem;
+            margin-left: 10px;
+            padding: 10px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .notification-icon:hover {
+            background-color: #f0f4ff;
+            color: #764ba2;
+        }
+
+        .badge {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            padding: 2px 7px;
+            border-radius: 50%;
+            background-color: #dc3545; /* Red for alert */
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            line-height: 1;
+            border: 2px solid white;
+        }
+        /* ----------------------------------------------------------------- */
+
+
         /* Main Content Styles */
         .main-content {
             flex: 1;
@@ -89,6 +131,7 @@
             width: 100%;
             text-align: center;
             transition: transform 0.3s ease;
+            border-top: 5px solid #764ba2; /* Theme Accent */
         }
 
         .dashboard-container:hover {
@@ -104,6 +147,10 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            display: flex; /* Added for Icon alignment */
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
         }
 
         .welcome-message {
@@ -121,7 +168,7 @@
             margin-bottom: 30px;
         }
 
-        button {
+        .action-button { /* Changed button selector to class for better styling control */
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
@@ -135,14 +182,18 @@
             width: 100%;
             max-width: 300px;
             margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
-        button:hover {
+        .action-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(102, 126, 234, 0.3);
         }
 
-        button:active {
+        .action-button:active {
             transform: translateY(0);
         }
 
@@ -168,6 +219,9 @@
             background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .help-desk-features p {
@@ -180,12 +234,13 @@
         .feature-list {
             text-align: left;
             margin-top: 15px;
+            padding-left: 20px;
         }
 
         .feature-list li {
             margin-bottom: 8px;
             color: #555;
-            padding-left: 5px;
+            list-style-type: disc;
         }
 
         .feature-list li strong {
@@ -222,10 +277,6 @@
             font-weight: 500;
         }
 
-        br {
-            display: none;
-        }
-
         /* Quick Actions */
         .quick-actions {
             display: grid;
@@ -253,6 +304,7 @@
         .action-icon {
             font-size: 2rem;
             margin-bottom: 10px;
+            color: #764ba2;
         }
 
         .action-title {
@@ -264,6 +316,10 @@
         .action-description {
             color: #666;
             font-size: 0.85rem;
+        }
+
+        br {
+            display: none;
         }
 
         /* Responsive design */
@@ -295,7 +351,7 @@
                 font-size: 1.1rem;
             }
 
-            button {
+            .action-button {
                 padding: 12px 25px;
                 font-size: 1rem;
             }
@@ -322,7 +378,7 @@
                 gap: 15px;
             }
 
-            button {
+            .action-button {
                 max-width: 100%;
             }
 
@@ -347,31 +403,33 @@
     </style>
 </head>
 <body>
-<!-- Header -->
 <div class="header">
     <div class="header-brand">
-        <h1>UniHelpDesk</h1>
+        <a th:href="@{/}" style="text-decoration: none;">
+            <h1>UniHelpDesk</h1>
+        </a>
     </div>
+
     <div class="header-nav">
-        <a th:href="@{/help-desk/dashboard}" class="nav-button">Dashboard</a>
-        <a th:href="@{/help-desk/tickets}" class="nav-button">Unassigned Tickets</a>
-        <a th:href="@{/help-desk/tickets/open}" class="nav-button">Open Tickets</a>
-        <a th:href="@{/help-desk/responses}" class="nav-button">My Responses</a>
-        <a href="index.html" class="nav-button">Logout</a>
+        <div th:replace="~{fragments/_notification-bell :: notificationBell}">
+            <a href="#" class="notification-icon" title="Notifications">
+                <i class="fas fa-bell"></i>
+                <span class="badge">5</span>
+            </a>
+        </div>
+        <a th:href="@{/login}" class="nav-button">Logout</a>
     </div>
 </div>
 
-<!-- Main Content -->
 <div class="main-content">
     <div class="dashboard-container">
-        <h1>Welcome, Help Desk Officer!</h1>
+        <h1><i class="fas fa-headset"></i> Welcome, Help Desk Officer!</h1>
 
         <div class="welcome-message">
             This is the main dashboard for managing and assigning all incoming support tickets.
             Coordinate support efforts and ensure timely responses to student inquiries.
         </div>
 
-        <!-- Quick Stats -->
         <div class="stats-grid">
             <div class="stat-item">
                 <div class="stat-number">15</div>
@@ -387,27 +445,10 @@
             </div>
         </div>
 
-        <!-- Quick Actions -->
-        <div class="quick-actions">
-            <div class="action-card" onclick="window.location.href='/help-desk/tickets'">
-                <div class="action-icon">📋</div>
-                <div class="action-title">Unassigned Tickets</div>
-                <div class="action-description">Review and assign new support requests</div>
-            </div>
-            <div class="action-card" onclick="window.location.href='/help-desk/tickets/open'">
-                <div class="action-icon">🔍</div>
-                <div class="action-title">Open Tickets</div>
-                <div class="action-description">Monitor ongoing support cases</div>
-            </div>
-            <div class="action-card" onclick="window.location.href='/help-desk/responses'">
-                <div class="action-icon">💬</div>
-                <div class="action-title">My Responses</div>
-                <div class="action-description">View your response history</div>
-            </div>
-        </div>
+
 
         <div class="help-desk-features">
-            <h3>Help Desk Officer Responsibilities</h3>
+            <h3><i class="fas fa-user-shield"></i> Help Desk Officer Responsibilities</h3>
             <p>As a Help Desk Officer, you are responsible for:</p>
             <ul class="feature-list">
                 <li><strong>Ticket Assignment:</strong> Assign incoming tickets to appropriate support staff</li>
@@ -418,11 +459,31 @@
         </div>
 
         <div class="button-group">
-            <a th:href="@{/help-desk/tickets}"><button>View Unassigned Tickets</button></a>
-            <a th:href="@{/help-desk/tickets/open}"><button>Open Tickets</button></a>
-            <a th:href="@{/help-desk/responses}"><button>View My Responses</button></a>
-            <a th:href="@{/kb/manage}"><button>Manage Knowledge Base</button></a>
-            <br><br>
+            <a th:href="@{/help-desk/tickets}">
+                <button type="button" class="action-button">
+                    <i class="fas fa-ticket-alt"></i> View Unassigned Tickets
+                </button>
+            </a>
+            <a th:href="@{/help-desk/tickets/open}">
+                <button type="button" class="action-button">
+                    <i class="fas fa-folder-open"></i> Open Tickets
+                </button>
+            </a>
+            <a th:href="@{/help-desk/responses}">
+                <button type="button" class="action-button">
+                    <i class="fas fa-reply-all"></i> View My Responses
+                </button>
+            </a>
+            <a th:href="@{/kb/manage}">
+                <button type="button" class="action-button">
+                    <i class="fas fa-book-open"></i> Manage Knowledge Base
+                </button>
+            </a>
+            <a th:href="@{/notifications/history}">
+                <button type="button" class="action-button">
+                    <i class="fas fa-history"></i> View All Notifications
+                </button>
+            </a>
         </div>
     </div>
 </div>

@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Global Styles from theme */
         * {
             margin: 0;
             padding: 0;
@@ -18,7 +20,7 @@
             flex-direction: column;
         }
 
-        /* Header Styles */
+        /* --- Standard Header Styles --- */
         .header {
             background: white;
             padding: 1.5rem 2rem;
@@ -50,6 +52,7 @@
         .header-nav {
             display: flex;
             gap: 15px;
+            align-items: center;
         }
 
         .nav-button {
@@ -71,24 +74,48 @@
             box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
         }
 
-        /* Main Content Styles */
+        /* --- Main Content Styles --- */
         .main-content {
             flex: 1;
             padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center; /* Center vertically */
+        }
+
+        .dashboard-container {
+            background: white;
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            text-align: center;
+            transition: transform 0.3s ease;
+            border-top: 5px solid #764ba2; /* Accent line for professional look */
+        }
+
+        .dashboard-container:hover {
+            transform: translateY(-5px);
         }
 
         h1 {
             color: #333;
             text-align: center;
             margin-bottom: 20px;
-            font-size: 2.5rem;
+            font-size: 2.8rem; /* Slightly larger admin title */
             font-weight: 700;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
         }
 
-        p {
+        .welcome-message {
             color: #555;
             text-align: center;
             font-size: 1.2rem;
@@ -99,56 +126,89 @@
             line-height: 1.6;
         }
 
-        .dashboard-container {
-            background: white;
-            padding: 50px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            max-width: 800px;
-            margin: 0 auto;
+        /* Action Buttons Grid */
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .action-card {
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+            padding: 25px;
+            border-radius: 10px;
+            border-bottom: 4px solid #667eea;
             text-align: center;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
         }
 
-        .dashboard-container:hover {
+        .action-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2);
+            border-bottom: 4px solid #764ba2;
         }
 
-        button {
+        .card-icon {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .action-card:hover .card-icon {
+            color: #764ba2;
+        }
+
+        .card-title {
+            color: #333;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .card-description {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+
+        .card-button {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 15px 30px;
-            border-radius: 8px;
-            font-size: 1.1rem;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(102, 126, 234, 0.2);
-            margin: 10px;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.3);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        a {
+            box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+            width: 100%; /* Full width button in card */
             text-decoration: none;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        /* Responsive design */
+        .card-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
+        }
+
+        /* --- Responsive design --- */
         @media (max-width: 768px) {
             .header {
                 padding: 1rem;
                 flex-direction: column;
                 gap: 15px;
-                text-align: center;
             }
 
             .header h1 {
@@ -164,70 +224,82 @@
             }
 
             h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
 
-            p {
+            .welcome-message {
                 font-size: 1.1rem;
             }
 
-            button {
-                padding: 12px 25px;
-                font-size: 1rem;
+            .action-grid {
+                grid-template-columns: 1fr; /* Single column on smaller screens */
+            }
+
+            .header-nav {
+                justify-content: center;
+                flex-wrap: wrap;
             }
         }
 
         @media (max-width: 480px) {
             h1 {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
-
-            p {
-                font-size: 1rem;
-            }
-
             .dashboard-container {
                 padding: 25px 15px;
-            }
-
-            button {
-                width: 100%;
-                margin: 5px 0;
-            }
-
-            .header-nav {
-                flex-direction: column;
-                width: 100%;
-            }
-
-            .nav-button {
-                width: 100%;
-                margin: 2px 0;
             }
         }
     </style>
 </head>
 <body>
-<!-- Header -->
+
 <div class="header">
     <div class="header-brand">
-        <h1>UniHelpDesk</h1>
+        <a th:href="@{/}" style="text-decoration: none;">
+            <h1>UniHelpDesk</h1>
+        </a>
     </div>
     <div class="header-nav">
-
-        <a th:href="@{/admin/users}" class="nav-button">User Management</a>
+        <div th:replace="~{fragments/_notification-bell :: notificationBell}"></div>
         <a th:href="@{/login}" class="nav-button">Logout</a>
+
     </div>
 </div>
 
-<!-- Main Content -->
 <div class="main-content">
     <div class="dashboard-container">
-        <h1>Welcome, Admin!</h1>
-        <p>This is the administrator's dashboard.</p>
-        <a th:href="@{/admin/users}"><button>User Management</button></a>
-        <a th:href="@{/kb/manage}"><button>Manage Knowledge Base</button></a>
-        <br><br>
+        <h1><i class="fas fa-tools"></i> Admin Dashboard</h1>
+        <p class="welcome-message">
+            Welcome, Admin! Use the control panel below to manage users, update support resources, and monitor system activity.
+        </p>
+
+        <div class="action-grid">
+            <a th:href="@{/admin/users}" class="action-card">
+                <i class="fas fa-users card-icon"></i>
+                <div class="card-title">User Management</div>
+                <div class="card-button">
+                    <i class="fas fa-arrow-right"></i> Manage Users
+                </div>
+            </a>
+
+            <a th:href="@{/kb/manage}" class="action-card">
+                <i class="fas fa-book-open card-icon"></i>
+                <div class="card-title">Manage Knowledge Base</div>
+                <div class="card-button">
+                    <i class="fas fa-arrow-right"></i> Manage Knowledge Base
+                </div>
+            </a>
+
+            <a th:href="@{/notifications/history}" class="action-card">
+                <i class="fas fa-bell card-icon"></i>
+                <div class="card-title">Notifications</div>
+                <div class="card-button">
+                    <i class="fas fa-arrow-right"></i> View All Notifications
+                </div>
+            </a>
+
+        </div>
+
     </div>
 </div>
 </body>

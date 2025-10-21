@@ -323,13 +323,14 @@
 <!-- Header -->
 <div class="header">
     <div class="header-brand">
-        <h1>UniHelpDesk</h1>
+        <a th:href="@{/}" style="text-decoration: none;">
+            <h1>UniHelpDesk</h1>
+        </a>
     </div>
+
     <div class="header-nav">
-        <a th:href="@{/help-desk/dashboard}" class="nav-button">Dashboard</a>
-        <a th:href="@{/help-desk/tickets}" class="nav-button">Assigned Tickets</a>
-        <a th:href="@{/help-desk/responses}" class="nav-button">My Responses</a>
-        <a href="index.html" class="nav-button">Logout</a>
+
+        <a th:href="@{/login}" class="nav-button">Logout</a>
     </div>
 </div>
 
@@ -377,7 +378,7 @@
             </tbody>
         </table>
 
-        <a th:href="@{/help-desk/dashboard}"><button>Back to Dashboard</button></a>
+
     </div>
 </div>
 </body>

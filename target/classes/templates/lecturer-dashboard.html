@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Lecturer Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Global Styles from theme */
         * {
             margin: 0;
             padding: 0;
@@ -18,7 +20,7 @@
             flex-direction: column;
         }
 
-        /* Header Styles */
+        /* --- Standard Header Styles --- */
         .header {
             background: white;
             padding: 1.5rem 2rem;
@@ -50,6 +52,7 @@
         .header-nav {
             display: flex;
             gap: 15px;
+            align-items: center; /* Ensures vertical centering */
         }
 
         .nav-button {
@@ -71,6 +74,44 @@
             box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
         }
 
+        /* --- Notification Bell Styling (Kept for Fragment) --- */
+        .notification-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .notification-icon {
+            color: #667eea;
+            font-size: 1.5rem;
+            margin-left: 10px;
+            padding: 10px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .notification-icon:hover {
+            background-color: #f0f4ff;
+            color: #764ba2;
+        }
+
+        .badge {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            padding: 2px 7px;
+            border-radius: 50%;
+            background-color: #dc3545;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            line-height: 1;
+            border: 2px solid white;
+        }
+        /* --- End Notification Bell Styling --- */
+
         /* Main Content Styles */
         .main-content {
             flex: 1;
@@ -85,10 +126,11 @@
             padding: 50px;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            max-width: 600px;
+            max-width: 600px; /* Original width */
             width: 100%;
             text-align: center;
             transition: transform 0.3s ease;
+            border-top: 5px solid #764ba2; /* Theme Accent */
         }
 
         .dashboard-container:hover {
@@ -104,6 +146,10 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            display: flex; /* Added flex for icon alignment */
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
         }
 
         .welcome-message {
@@ -114,6 +160,7 @@
             line-height: 1.6;
         }
 
+        /* Original Simple Button Group Styling */
         .button-group {
             display: flex;
             flex-direction: column;
@@ -121,7 +168,16 @@
             margin-bottom: 30px;
         }
 
-        button {
+        /* Use original simple button style and apply to <a> tag content */
+        .action-link {
+            text-decoration: none;
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .action-button {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
@@ -133,22 +189,15 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 6px rgba(102, 126, 234, 0.2);
             width: 100%;
-            max-width: 300px;
-            margin: 0 auto;
+            display: flex; /* For icon alignment */
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
-        button:hover {
+        .action-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(102, 126, 234, 0.3);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        a {
-            text-decoration: none;
-            display: block;
         }
 
         .message-success {
@@ -159,7 +208,7 @@
             border: 1px solid #c3e6cb;
             margin: 20px auto;
             max-width: 500px;
-            font-weight: 500;
+            font-weight: 600;
             text-align: center;
             font-size: 1rem;
         }
@@ -172,35 +221,37 @@
             border: 1px solid #f5c6cb;
             margin: 20px auto;
             max-width: 500px;
-            font-weight: 500;
+            font-weight: 600;
             text-align: center;
             font-size: 1rem;
         }
 
-        br {
-            display: none;
-        }
-
         /* Lecturer specific styling */
         .lecturer-features {
-            background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
-            padding: 20px;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e0eaff 100%);
+            padding: 25px;
             border-radius: 10px;
             margin: 25px 0;
-            border-left: 4px solid #667eea;
+            border-left: 5px solid #667eea;
+            text-align: left;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .lecturer-features h3 {
             color: #333;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .lecturer-features p {
             color: #555;
-            font-size: 0.95rem;
-            line-height: 1.5;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin: 0;
         }
 
         /* Responsive design */
@@ -232,7 +283,7 @@
                 font-size: 1.1rem;
             }
 
-            button {
+            .action-button {
                 padding: 12px 25px;
                 font-size: 1rem;
             }
@@ -251,7 +302,7 @@
                 gap: 15px;
             }
 
-            button {
+            .action-link {
                 max-width: 100%;
             }
 
@@ -272,41 +323,60 @@
     </style>
 </head>
 <body>
-<!-- Header -->
 <div class="header">
     <div class="header-brand">
-        <h1>UniHelpDesk</h1>
+        <a th:href="@{/}" style="text-decoration: none;">
+            <h1>UniHelpDesk</h1>
+        </a>
     </div>
     <div class="header-nav">
-        <a th:href="@{/lecturer/dashboard}" class="nav-button">Dashboard</a>
-        <a th:href="@{/lecturer/tickets}" class="nav-button">Assigned Tickets</a>
-        <a th:href="@{/lecturer/responses}" class="nav-button">My Responses</a>
-        <a href="index.html" class="nav-button">Logout</a>
+        <div th:replace="~{fragments/_notification-bell :: notificationBell}">
+            <a href="#" class="notification-icon" title="Notifications">
+                <i class="fas fa-bell"></i>
+                <span class="badge">3</span>
+            </a>
+        </div>
+        <a th:href="@{/login}" class="nav-button">Logout</a>
     </div>
 </div>
 
-<!-- Main Content -->
 <div class="main-content">
     <div class="dashboard-container">
-        <h1>Welcome, Lecturer!</h1>
+        <h1><i class="fas fa-chalkboard-teacher"></i> Welcome, Lecturer!</h1>
 
         <div class="welcome-message">
             Manage your assigned support tickets and track your responses to student inquiries.
         </div>
 
-        <div class="lecturer-features">
-            <h3>Lecturer Features</h3>
-            <p>As a lecturer, you can view tickets assigned to you, provide academic support responses, and manage your interaction history with students.</p>
-        </div>
+
 
         <div th:if="${successMessage}" class="message-success" th:text="${successMessage}"></div>
         <div th:if="${errorMessage}" class="message-error" th:text="${errorMessage}"></div>
 
         <div class="button-group">
-            <a th:href="@{/lecturer/tickets}"><button>View Assigned Tickets</button></a>
-            <a th:href="@{/lecturer/responses}"><button>View My Responses</button></a>
-            <a th:href="@{/kb/manage}"><button>Manage Knowledge Base</button></a>
-            <br><br>
+            <a th:href="@{/lecturer/tickets}" class="action-link">
+                <button type="button" class="action-button">
+                    <i class="fas fa-ticket-alt"></i> View Assigned Tickets
+                </button>
+            </a>
+
+            <a th:href="@{/lecturer/responses}" class="action-link">
+                <button type="button" class="action-button">
+                    <i class="fas fa-reply-all"></i> View My Responses
+                </button>
+            </a>
+
+            <a th:href="@{/kb/manage}" class="action-link">
+                <button type="button" class="action-button">
+                    <i class="fas fa-book-open"></i> Manage Knowledge Base
+                </button>
+            </a>
+
+            <a th:href="@{/notifications/history}" class="action-link">
+                <button type="button" class="action-button">
+                    <i class="fas fa-history"></i> View All Notifications
+                </button>
+            </a>
         </div>
     </div>
 </div>
