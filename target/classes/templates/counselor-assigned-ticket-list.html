@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>My Confidential Tickets</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Global & Layout Styles */
         * {
             margin: 0;
             padding: 0;
@@ -50,6 +52,7 @@
         .header-nav {
             display: flex;
             gap: 15px;
+            align-items: center;
         }
 
         .nav-button {
@@ -89,6 +92,9 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
         .content-container {
@@ -99,10 +105,12 @@
             max-width: 1200px;
             width: 100%;
             transition: transform 0.3s ease;
+            border-top: 5px solid #764ba2;
         }
 
         .content-container:hover {
-            transform: translateY(-5px);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
         }
 
         /* Confidential Banner */
@@ -210,10 +218,11 @@
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 600;
-            text-transform: uppercase;
+            text-transform: capitalize; /* Changed to capitalize for better look */
             letter-spacing: 0.5px;
         }
 
+        /* Theme-specific badge colors (assuming categories like Mental_Health, Academic, Personal, Career) */
         .category-mental-health {
             background-color: #ffebee;
             color: #c62828;
@@ -234,6 +243,12 @@
             color: #2e7d32;
         }
 
+        /* Default for unknown/other categories */
+        .category-other {
+            background-color: #e0e0e0;
+            color: #555;
+        }
+
         /* Button Styles */
         .button-group {
             display: flex;
@@ -241,7 +256,7 @@
             margin-top: 20px;
         }
 
-        button {
+        .theme-button { /* Renamed button to theme-button for consistency */
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
@@ -252,14 +267,17 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 4px 6px rgba(102, 126, 234, 0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        button:hover {
+        .theme-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(102, 126, 234, 0.3);
         }
 
-        button:active {
+        .theme-button:active {
             transform: translateY(0);
         }
 
@@ -302,7 +320,7 @@
                 font-size: 0.9rem;
             }
 
-            button {
+            .theme-button {
                 padding: 10px 20px;
                 font-size: 0.95rem;
             }
@@ -343,25 +361,22 @@
             }
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-<!-- Header -->
 <div class="header">
     <div class="header-brand">
-        <h1>UniHelpDesk</h1>
+        <a th:href="@{/}" style="text-decoration: none;">
+            <h1>UniHelpDesk</h1>
+        </a>
     </div>
+
     <div class="header-nav">
-        <a th:href="@{/counselor/dashboard}" class="nav-button">Dashboard</a>
-        <a th:href="@{/counselor/tickets}" class="nav-button">Confidential Tickets</a>
-        <a th:href="@{/counselor/responses}" class="nav-button">My Responses</a>
-        <a href="index.html" class="nav-button">Logout</a>
+        <a th:href="@{/login}" class="nav-button">Logout</a>
     </div>
 </div>
 
-<!-- Main Content -->
 <div class="main-content">
-    <h1 class="page-title">My Confidential Tickets</h1>
+    <h1 class="page-title"><i class="fas fa-user-friends"></i> My Confidential Tickets</h1>
 
     <div class="content-container">
         <div class="confidential-banner">
@@ -383,23 +398,31 @@
                 <td>
                     <a class="ticket-link" th:href="@{/counselor/ticket/view/{id}(id=${ticket.ticketId})}">
                         <i class="fas fa-file-alt"></i>
-                        <span th:text="${ticket.ticketId}"></span>
+                        <span th:text="${ticket.ticketId}">TKT-CONF-001</span>
                     </a>
                 </td>
-                <td th:text="${ticket.studentUniversityId}"></td>
+                <td th:text="${ticket.studentUniversityId}">S0000</td>
                 <td>
-                    <span class="category-badge" th:classappend="'category-' + ${ticket.category?.toLowerCase()?.replace(' ', '-')}" th:text="${ticket.category}"></span>
+                    <span class="category-badge"
+                          th:classappend="'category-' + ${ticket.category?.toLowerCase()?.replace('_', '-')}"
+                          th:text="${ticket.category?.replace('_', ' ')}">Mental Health</span>
                 </td>
-                <td th:text="${#temporals.format(ticket.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${#temporals.format(ticket.createdAt, 'yyyy-MM-dd HH:mm')}">2023-10-21 14:30</td>
             </tr>
             <tr th:if="${#lists.isEmpty(tickets)}">
-                <td colspan="4" class="no-tickets">No confidential tickets assigned to you at the moment.</td>
+                <td colspan="4" class="no-tickets">
+                    <i class="fas fa-check-circle"></i> No confidential tickets assigned to you at the moment.
+                </td>
             </tr>
             </tbody>
         </table>
 
         <div class="button-group">
-            <a th:href="@{/counselor/dashboard}"><button>Back to Dashboard</button></a>
+            <a th:href="@{/counselor/dashboard}">
+                <button type="button" class="theme-button">
+                    <i class="fas fa-arrow-circle-left"></i> Back to Dashboard
+                </button>
+            </a>
         </div>
     </div>
 </div>

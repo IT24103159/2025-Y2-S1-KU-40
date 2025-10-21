@@ -3,58 +3,275 @@
 <head>
   <meta charset="UTF-8">
   <title>View My Ticket</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body { font-family: sans-serif; }
-    .container { max-width: 800px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
-    h1, h2, h3 { border-bottom: 2px solid #007bff; padding-bottom: 5px; }
-    .details-grid, .message-box, .response-container { margin-bottom: 20px; }
-    .message-box, .response-message { background-color: #f9f9f9; border: 1px solid #eee; padding: 15px; border-radius: 4px; white-space: pre-wrap; }
-    .response-container { border: 1px solid #ccc; padding: 10px; border-radius: 5px; }
-    button { padding: 10px 15px; background-color: #555; color: white; border: none; cursor: pointer; border-radius: 4px; }
-    button:hover { background-color: #777; }
+    /* Theme Global Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 40px 20px;
+    }
+
+    /* --- Content Container --- */
+    .ticket-container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+      border-top: 5px solid #667eea; /* Theme Accent */
+      width: 100%;
+    }
+
+    .ticket-container:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    /* --- Titles --- */
+    h1 {
+      color: #333;
+      margin-bottom: 25px;
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    h2 {
+      color: #444;
+      font-size: 1.8rem;
+      margin-top: 30px;
+      margin-bottom: 20px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h3 {
+      color: #667eea;
+      font-size: 1.4rem;
+      margin-top: 25px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* --- Ticket Information Section --- */
+    .details-grid {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      padding: 15px 20px;
+      background-color: #f8f9ff;
+      border-radius: 8px;
+      border-left: 3px solid #667eea;
+    }
+
+    .details-grid p {
+      margin: 0;
+      color: #555;
+      font-size: 1rem;
+      flex: 1 1 30%; /* Allow items to wrap nicely */
+    }
+
+    .details-grid strong {
+      font-weight: 600;
+      color: #333;
+    }
+
+    /* --- Message Box (Original Student Message) --- */
+    .message-box {
+      background-color: #ffffff;
+      border: 1px solid #dcdcdc;
+      padding: 20px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .message-box p {
+      color: #444;
+      font-size: 1rem;
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    /* --- Responses Section --- */
+    .response-container {
+      background-color: #ffffff;
+      border: 1px solid #e0e0e0;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+      border-left: 5px solid #764ba2;
+    }
+
+    .response-container strong {
+      color: #764ba2;
+      font-weight: 700;
+    }
+
+    .response-container p {
+      margin: 0 0 5px 0;
+      font-size: 0.95rem;
+      color: #666;
+    }
+
+    .response-message {
+      background-color: #f0f4ff;
+      border: 1px solid #c3cfe2;
+      padding: 15px;
+      border-radius: 6px;
+      white-space: pre-wrap;
+      margin-top: 10px;
+      font-size: 1rem;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .no-responses-message {
+      padding: 15px;
+      background-color: #f0f4ff;
+      border: 1px dashed #667eea;
+      color: #667eea;
+      border-radius: 8px;
+      text-align: center;
+      font-style: italic;
+      font-weight: 500;
+    }
+
+    /* --- Buttons --- */
+    .back-button-link {
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 30px;
+    }
+
+    .theme-button {
+      /* Back button style */
+      background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(108, 117, 125, 0.2);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .theme-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(108, 117, 125, 0.3);
+    }
+
+    /* Fallback message style */
+    .not-found-message {
+      color: #dc3545;
+      padding: 15px;
+      border: 1px solid #f5c6cb;
+      background-color: #f8d7da;
+      border-radius: 8px;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px dashed #dcdcdc;
+      margin: 20px 0;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .ticket-container {
+        padding: 30px 20px;
+        margin: 0;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      .details-grid p {
+        flex: 1 1 100%;
+      }
+      .theme-button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
   </style>
 </head>
 <body>
-<div class="container">
-  <h1>Ticket Details</h1>
+<div class="ticket-container">
+  <h1><i class="fas fa-search"></i> View Ticket Details</h1>
+
   <div th:if="${ticket != null}">
 
-    <h3>Your Ticket Information</h3>
+    <h3><i class="fas fa-ticket-alt"></i> Your Ticket Information</h3>
     <div class="details-grid">
-      <p><strong>Ticket ID:</strong> <span th:text="${ticket.ticketId}"></span></p>
-      <p><strong>Status:</strong> <span th:text="${ticket.status}"></span></p>
-      <p><strong>Subject:</strong> <span th:text="${ticket.subject}"></span></p>
+      <p><strong>Ticket ID:</strong> <span th:text="${ticket.ticketId}">TKT-001</span></p>
+      <p><strong>Status:</strong> <span th:text="${ticket.status}">Open</span></p>
+      <p><strong>Subject:</strong> <span th:text="${ticket.subject}">Wi-Fi Connection Issue</span></p>
     </div>
 
-    <h3>Your Original Message</h3>
+    <h3><i class="fas fa-comment-alt"></i> Your Original Message</h3>
     <div class="message-box">
-      <p th:text="${ticket.message}"></p>
+      <p th:text="${ticket.message}">This is the message I submitted when creating the ticket. I need help urgently with this technical issue.</p>
     </div>
     <hr>
 
-    <h2>Responses</h2>
+    <h2><i class="fas fa-reply-all"></i> Responses from Support Staff</h2>
+
     <div th:if="${not #lists.isEmpty(ticket.responses)}">
       <div th:each="response : ${ticket.responses}" class="response-container">
         <p>
-          <strong>From:</strong> <span th:text="${response.responder.name}"></span>
-          (Replied on: <span th:text="${#temporals.format(response.createdAt, 'yyyy-MM-dd HH:mm')}"></span>)
+          <strong>From:</strong> <span th:text="${response.responder.name}">IT Support Officer</span>
+          (Replied on: <span th:text="${#temporals.format(response.createdAt, 'yyyy-MM-dd HH:mm')}">2023-10-21 15:00</span>)
         </p>
         <div class="response-message">
-          <p th:text="${response.responseMessage}"></p>
+          <p th:text="${response.responseMessage}">Thank you for reaching out. We have received your ticket and are currently investigating the issue. Please try restarting your device and checking your network settings.</p>
         </div>
       </div>
     </div>
-    <div th:if="${#lists.isEmpty(ticket.responses)}">
-      <p>There are no responses for this ticket yet.</p>
+
+    <div th:if="${#lists.isEmpty(ticket.responses)}" class="no-responses-message">
+      <p><i class="fas fa-clock"></i> There are no responses for this ticket yet. Please check back later.</p>
     </div>
   </div>
-  <div th:if="${ticket == null}">
-    <p>Could not load ticket details.</p>
+
+  <div th:if="${ticket == null}" class="not-found-message">
+    <p><i class="fas fa-exclamation-triangle"></i> Could not load ticket details.</p>
   </div>
 
-  <br>
-  <a th:href="@{/student/my-tickets}">
-    <button>Back to My Tickets</button>
+  <a th:href="@{/student/my-tickets}" class="back-button-link">
+    <button type="button" class="theme-button">
+      <i class="fas fa-arrow-circle-left"></i> Back to My Tickets
+    </button>
   </a>
 </div>
 </body>

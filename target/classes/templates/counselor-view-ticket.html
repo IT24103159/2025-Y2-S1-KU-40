@@ -3,56 +3,252 @@
 <head>
     <meta charset="UTF-8">
     <title>View Confidential Ticket</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: sans-serif; line-height: 1.6; }
-        .container { max-width: 800px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
-        h1, h2 { border-bottom: 2px solid #d9534f; padding-bottom: 5px; color: #d9534f;}
-        .details-grid { display: grid; grid-template-columns: 120px 1fr; gap: 10px; margin-bottom: 20px; }
-        .details-grid strong { font-weight: bold; }
-        .message-box { background-color: #f9f9f9; border: 1px solid #eee; padding: 15px; border-radius: 4px; white-space: pre-wrap; font-family: monospace; }
-        form { background-color: #f2f2f2; padding: 15px; border-radius: 4px; }
-        textarea { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; }
-        button { padding: 10px 15px; background-color: #d9534f; color: white; border: none; cursor: pointer; border-radius: 4px; }
-        button:hover { background-color: #c9302c; }
+        /* Theme Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 40px 20px;
+        }
+
+        /* --- Content Container --- */
+        .ticket-container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            border-top: 5px solid #ff7043; /* Theme Accent: Soft Orange for Confidentiality */
+        }
+
+        .ticket-container:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        /* --- Titles --- */
+        h1 {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            /* Using a strong red/orange gradient to highlight confidentiality */
+            background: linear-gradient(135deg, #d9534f 0%, #ff7043 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h2 {
+            color: #444;
+            font-size: 1.5rem;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #ff7043; /* Match theme accent */
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- Details Grid --- */
+        .details-grid {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+            background-color: #fff3e0; /* Light accent background for details */
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #ffe0b2;
+        }
+
+        .details-grid strong {
+            font-weight: 600;
+            color: #d9534f; /* Accent color for key labels */
+        }
+
+        .details-grid span {
+            color: #555;
+            font-weight: 500;
+        }
+
+        /* --- Message Box --- */
+        .message-box {
+            background-color: #ffffff;
+            border: 2px solid #ff7043; /* Stronger border to show importance */
+            padding: 20px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            box-shadow: 0 2px 5px rgba(255, 112, 67, 0.2);
+            font-family: 'Consolas', monospace; /* Keep monospace for code/message clarity */
+            color: #333;
+        }
+
+        .message-box p {
+            margin: 0;
+            line-height: 1.7;
+        }
+
+        /* --- Response Form --- */
+        .response-form {
+            background-color: #f2f2f2;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            margin-top: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+            min-height: 180px;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            border-color: #ff7043;
+            outline: none;
+            box-shadow: 0 0 5px rgba(255, 112, 67, 0.5);
+        }
+
+        /* --- Buttons --- */
+        .theme-button {
+            /* Response button: Using the prominent red/orange theme color */
+            background: linear-gradient(135deg, #d9534f 0%, #ff7043 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(217, 83, 79, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(217, 83, 79, 0.4);
+        }
+
+        .back-button-link {
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 30px;
+        }
+
+        .back-button {
+            /* Back button: Using the generic gray color from other dashboards */
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%) !important;
+            box-shadow: 0 4px 6px rgba(108, 117, 125, 0.2);
+        }
+
+        .back-button:hover {
+            box-shadow: 0 6px 12px rgba(108, 117, 125, 0.3);
+        }
+
+        .not-found-message {
+            color: #d9534f;
+            padding: 15px;
+            border: 1px solid #f5c6cb;
+            background-color: #f8d7da;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .ticket-container {
+                padding: 30px 20px;
+                margin: 0;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .details-grid {
+                grid-template-columns: 1fr; /* Single column layout on mobile */
+                gap: 10px;
+            }
+            .details-grid strong {
+                display: block;
+                margin-bottom: 5px;
+            }
+            .theme-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>Confidential Ticket</h1>
+<div class="ticket-container">
+    <h1><i class="fas fa-user-secret"></i> Confidential Ticket</h1>
 
     <div th:if="${ticket != null}">
         <div class="details-grid">
-            <strong>Ticket ID:</strong>
-            <span th:text="${ticket.ticketId}"></span>
+            <strong><i class="fas fa-tag"></i> Ticket ID:</strong>
+            <span th:text="${ticket.ticketId}">TKT-CONF-001</span>
 
-            <strong>Status:</strong>
-            <span th:text="${ticket.status}"></span>
+            <strong><i class="fas fa-shield-alt"></i> Status:</strong>
+            <span th:text="${ticket.status}">Open</span>
 
-            <strong>Subject:</strong>
-            <span th:text="${ticket.subject}"></span>
+            <strong><i class="fas fa-heading"></i> Subject:</strong>
+            <span th:text="${ticket.subject}">Extreme Stress and Anxiety</span>
         </div>
 
-        <h2>Student's Message (Decrypted)</h2>
+        <h2><i class="fas fa-envelope-open-text"></i> Student's Message (Decrypted)</h2>
         <div class="message-box">
-            <p th:text="${ticket.message}"></p>
+            <p th:text="${ticket.message}">This is the deeply personal and confidential message sent by the student regarding their emotional and mental well-being. The content must be treated with the utmost care and professionalism.</p>
         </div>
 
-        <hr style="margin-top: 25px; margin-bottom: 25px;">
+        <hr style="margin-top: 35px; margin-bottom: 35px; border-top: 1px dashed #ff7043;">
 
-        <h2>Send Confidential Response</h2>
-        <form th:action="@{/counselor/ticket/respond}" method="post">
+        <h2><i class="fas fa-reply-all"></i> Send Confidential Response</h2>
+        <form th:action="@{/counselor/ticket/respond}" method="post" class="response-form">
             <input type="hidden" name="ticketId" th:value="${ticket.ticketId}" />
-            <textarea name="responseMessage" placeholder="Type your confidential response to the student..." required rows="8"></textarea>
-            <button type="submit">Send Secure Response</button>
+
+            <textarea name="responseMessage"
+                      placeholder="Type your confidential, supportive, and professional response to the student..."
+                      required rows="8"></textarea>
+
+            <button type="submit" class="theme-button">
+                <i class="fas fa-paper-plane"></i> Send Secure Response
+            </button>
         </form>
     </div>
 
-    <div th:if="${ticket == null}">
-        <p>Could not find ticket details.</p>
+    <div th:if="${ticket == null}" class="not-found-message">
+        <p><i class="fas fa-exclamation-triangle"></i> Could not find ticket details.</p>
     </div>
 
-    <br>
-    <a th:href="@{/counselor/tickets}"><button style="background-color: #555;">Back to Ticket List</button></a>
+    <a th:href="@{/counselor/tickets}" class="back-button-link">
+        <button type="button" class="theme-button back-button">
+            <i class="fas fa-arrow-circle-left"></i> Back to Ticket List
+        </button>
+    </a>
 </div>
 </body>
 </html>

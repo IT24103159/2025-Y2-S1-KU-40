@@ -354,14 +354,12 @@
 <!-- Header -->
 <div class="header">
     <div class="header-brand">
-        <h1>UniHelpDesk</h1>
+        <a th:href="@{/}" style="text-decoration: none;">
+            <h1>UniHelpDesk</h1>
+        </a>
     </div>
     <div class="header-nav">
-        <a th:href="@{/help-desk/dashboard}" class="nav-button">Dashboard</a>
-        <a th:href="@{/help-desk/tickets}" class="nav-button">Unassigned Tickets</a>
-        <a th:href="@{/help-desk/assigned-tickets}" class="nav-button">Assigned Tickets</a>
-        <a th:href="@{/help-desk/user-management}" class="nav-button">User Management</a>
-        <a href="index.html" class="nav-button">Logout</a>
+        <a th:href="@{/login}" class="nav-button">Logout</a>
     </div>
 </div>
 
