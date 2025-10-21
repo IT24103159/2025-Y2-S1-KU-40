@@ -78,8 +78,7 @@ public class NotificationServiceImpl implements NotificationService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
-        // Repository එකේ හදපු අලුත් method එක call කරනවා
-        // මේකෙන් 'is_read' filter කරන්නේ නැතුව, user ගේ 'සියලුම' notifications ටික ගන්නවා
+
         return notificationRepository.findByUserOrderByCreatedAtDesc(user);
     }
 }

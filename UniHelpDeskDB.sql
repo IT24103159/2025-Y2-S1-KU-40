@@ -101,7 +101,7 @@ CREATE TABLE tickets (
     FOREIGN KEY (student_id) REFERENCES users(user_id),
     FOREIGN KEY (module_id) REFERENCES modules(module_id),
     FOREIGN KEY (assigned_to) REFERENCES users(user_id)
-);
+);v
 GO
 -----------------------------------------------------------------------------------------------------------------
 CREATE TABLE ticket_attachments (
@@ -131,14 +131,14 @@ GO
 -- Knowledge Base
 CREATE TABLE knowledge_base_articles (
 
-                                         article_id INT PRIMARY KEY IDENTITY(1,1),
-                                         title NVARCHAR(255) NOT NULL,
-                                         content NVARCHAR(MAX) NOT NULL,
-                                         author_id INT NOT NULL,
-                                         category VARCHAR(50) NOT NULL,
-                                         created_at DATETIME DEFAULT GETDATE(),
-                                         updated_at DATETIME,
-                                         FOREIGN KEY (author_id) REFERENCES users(user_id)
+article_id INT PRIMARY KEY IDENTITY(1,1),
+title NVARCHAR(255) NOT NULL,
+content NVARCHAR(MAX) NOT NULL,
+author_id INT NOT NULL,
+category VARCHAR(50) NOT NULL,
+created_at DATETIME DEFAULT GETDATE(),
+updated_at DATETIME,
+FOREIGN KEY (author_id) REFERENCES users(user_id)
 );
 GO
 
@@ -147,6 +147,20 @@ ALTER TABLE knowledge_base_articles
     ADD CONSTRAINT CK_kb_category CHECK (category IN ('IT_Support', 'Academic_Support', 'Counseling_Support', 'General_Info'));
 GO
 
+----------------------------------------------------------------------------------------------------------------
+--      Notification System 
+
+
+CREATE TABLE notifications (
+    notification_id INT PRIMARY KEY IDENTITY(1,1),
+    user_id INT NOT NULL,
+    message NVARCHAR(255) NOT NULL,
+    link NVARCHAR(255),
+    is_read BIT NOT NULL DEFAULT 0,
+    created_at DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+GO
 ----------------------------------------------------------------------------------------------------------------
 
 SELECT * FROM students;
@@ -160,6 +174,58 @@ SELECT * FROM ticket_attachments;
 SELECT * FROM ticket_responses;
 
 SELECT * FROM knowledge_base_articles;
+SELECT * FROM notifications;
 
 SELECT * FROM users;
 
+---------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------
+SET IDENTITY_INSERT users ON;
+
+INSERT INTO users 
+(user_id, created_at, email, name, password_hash, role, university_id) 
+VALUES 
+(7, GETDATE(), 'testuser7@example.com', 'Test User 7', 'password123', 'STUDENT', 'U001');
+
+SET IDENTITY_INSERT users OFF;
+
+------------------------------------------------------------------------------------------
+SET IDENTITY_INSERT users ON;
+
+INSERT INTO users 
+(user_id, name, email, university_id, password_hash, role, created_at) 
+VALUES 
+(1, 'Admin User', 'admin@uni.ac.lk', 'ADMIN001', 'adminpass', 'Admin', GETDATE());
+
+SET IDENTITY_INSERT users OFF;
+-----------------------------------------------------------------------------------------
+SET IDENTITY_INSERT users ON;
+
+INSERT INTO users 
+(user_id, created_at, email, name, password_hash, role, university_id) 
+VALUES 
+(15, GETDATE(), 'testuser15@example.com', 'Test User 15', 'password123', 'STUDENT', 'U015');
+
+SET IDENTITY_INSERT users OFF;
+
+
+-----------------------------------------------------------------------------------
+DELETE FROM ticket_attachments 
+WHERE ticket_id IN (
+    SELECT ticket_id FROM tickets WHERE student_id NOT IN (SELECT user_id FROM users)
+);
+
+DELETE FROM ticket_responses 
+WHERE ticket_id IN (
+    SELECT ticket_id FROM tickets WHERE student_id NOT IN (SELECT user_id FROM users)
+);
+
+DELETE FROM tickets 
+WHERE student_id NOT IN (SELECT user_id FROM users);
+
+DELETE FROM notifications 
+WHERE user_id NOT IN (SELECT user_id FROM users);
+
+DELETE FROM knowledge_base_articles
+WHERE author_id NOT IN (SELECT user_id FROM users);
