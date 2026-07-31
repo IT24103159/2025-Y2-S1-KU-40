@@ -1,14 +1,14 @@
-# 🎓 Web-Based Help Desk System for University Students
+# Web-Based Help Desk System for University Students
 
 [![Java](https://img.shields.io/badge/Java-21-orange.svg?style=flat&logo=openjdk)](https://www.oracle.com/java/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.6-brightgreen.svg?style=flat&logo=springboot)](https://spring.io/projects/spring-boot)
 [![Thymeleaf](https://img.shields.io/badge/Thymeleaf-3.x-green.svg?style=flat&logo=thymeleaf)](https://www.thymeleaf.org/)
 [![Database](https://img.shields.io/badge/Database-MS%20SQL%20Server-blue.svg?style=flat&logo=microsoftsqlserver)](https://www.microsoft.com/sql-server)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 
 A centralized, enterprise-grade Java web application designed to streamline, track, and resolve academic, technical, administrative, and confidential counseling inquiries for university students. 
 
-Developed as part of the **SE2030 - Software Engineering** module at the **Sri Lanka Institute of Information Technology (SLIIT)** (Year 2 Semester 1, 2025) by **Group 2025-Y2-S1-KU-40**.
+Developed as part of the **SE2030 - Software Engineering** module (Year 2 Semester 1, 2025) by **Group 2025-Y2-S1-KU-40**.
 
 ---
 
@@ -17,12 +17,9 @@ Developed as part of the **SE2030 - Software Engineering** module at the **Sri L
 - [Key Features & Role-Based Workflows](#-key-features--role-based-workflows)
 - [Software Architecture & Design Patterns](#-software-architecture--design-patterns)
 - [Technology Stack](#-technology-stack)
-- [Database Schema & ER Structure](#-database-schema--er-structure)
 - [Getting Started & Local Setup](#-getting-started--local-setup)
-- [Project Management & Agile Sprints](#-project-management--agile-sprints)
 - [Team Members & Individual Contributions](#-team-members--individual-contributions)
-- [Future Enhancements](#-future-enhancements)
-- [License](#-license)
+
 
 ---
 
@@ -129,20 +126,7 @@ The project follows a clean **Model-View-Controller (MVC)** architecture layered
 
 ---
 
-## 🗄 Database Schema & ER Structure
 
-The database schema (`UniHelpDeskDB`) consists of 11 relational tables structured to support RBAC and inheritance:
-
-* **`users`** (Base entity storing credentials, role enum, and timestamps)
-* **`students`** & **`support_staff`** & **`lecturers`** (Inheritance extensions for role-specific attributes)
-* **`tickets`** (Core entity containing title, category, status, priority, and FK references)
-* **`ticket_responses`** (Threaded conversation records linked to tickets)
-* **`ticket_attachments`** (Metadata for uploaded file attachments stored in `./uploads`)
-* **`knowledge_base_articles`** (FAQ articles linked to author users)
-* **`notifications`** (System alerts linked to target users)
-* **`faculties`** & **`modules`** (Academic organizational hierarchy)
-
----
 
 ## 🚀 Getting Started & Local Setup
 
@@ -196,24 +180,10 @@ Make sure you have the following installed on your local development machine:
 
 ---
 
-## 📅 Project Management & Agile Sprints
-
-The system was iteratively developed over a 12-week timeframe following the **Agile (Scrum)** methodology:
-
-| Sprint | Timeline | Objectives & Milestone Output |
-| :--- | :--- | :--- |
-| **Sprint 1** | Weeks 1-3 | Foundation & Security: Spring Boot setup, SQL database initialization, JPA Entities, BCrypt security, and basic navigation layout. |
-| **Sprint 2** | Weeks 4-6 | Core Ticketing Lifecycle: Student ticket submission with file attachments, Help Desk Unassigned Queue, and manual routing workflows. |
-| **Sprint 3** | Weeks 7-9 | Ticket Resolution & Self-Service: Threaded staff responses, Public KB portal, Staff KB management page, Factory & Strategy design patterns. |
-| **Sprint 4** | Weeks 10-12 | Advanced & Confidential Modules: Real-time Observer Pattern Notification System, AES Confidential Counseling module, system testing & bug fixes. |
-
----
 
 ## 👥 Team Members & Individual Contributions
 
 **Group ID:** `2025-Y2-S1-KU-40`  
-**Institution:** Sri Lanka Institute of Information Technology (SLIIT)  
-**Course:** SE2030 - Software Engineering (Year 2 Semester 1 - 2025)
 
 | Student ID | Student Name | Assigned Role & Feature Responsibilities |
 | :--- | :--- | :--- |
@@ -226,15 +196,5 @@ The system was iteratively developed over a 12-week timeframe following the **Ag
 
 ---
 
-## 🔮 Future Enhancements
 
-- [ ] **Email Notification Integration:** Extend the Observer Pattern to send automated email notifications via JavaMailSender.
-- [ ] **Live Chat Feature:** Integrate real-time WebSocket communication for instant messaging between students and active Help Desk staff.
-- [ ] **AI-Based Automated Ticket Routing:** Incorporate Machine Learning NLP algorithms to automatically classify and route incoming tickets based on description keywords.
-- [ ] **Mobile Responsive React/Next.js Frontend:** Develop a modern Single Page Application (SPA) or dedicated mobile app for improved accessibility.
 
----
-
-## 📄 License
-
-This project is created for academic assessment purposes under the SE2030 Software Engineering module at SLIIT. Distributed under the [MIT License](LICENSE).
