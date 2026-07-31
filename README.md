@@ -4,11 +4,11 @@
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.6-brightgreen.svg?style=flat&logo=springboot)](https://spring.io/projects/spring-boot)
 [![Thymeleaf](https://img.shields.io/badge/Thymeleaf-3.x-green.svg?style=flat&logo=thymeleaf)](https://www.thymeleaf.org/)
 [![Database](https://img.shields.io/badge/Database-MS%20SQL%20Server-blue.svg?style=flat&logo=microsoftsqlserver)](https://www.microsoft.com/sql-server)
-
+[![Methodology](https://img.shields.io/badge/Methodology-Agile%20%2F%20Scrum-blue.svg?style=flat)](https://scrumguides.org/)
 
 A centralized, enterprise-grade Java web application designed to streamline, track, and resolve academic, technical, administrative, and confidential counseling inquiries for university students. 
 
-Developed as part of the **SE2030 - Software Engineering** module (Year 2 Semester 1, 2025) by **Group 2025-Y2-S1-KU-40**.
+Developed as part of the **SE2030 - Software Engineering** module (Year 2 Semester 1, 2025) by **Group 2025-Y2-S1-KU-40** using **Agile (Scrum)** development methodology.
 
 ---
 
@@ -17,9 +17,9 @@ Developed as part of the **SE2030 - Software Engineering** module (Year 2 Semest
 - [Key Features & Role-Based Workflows](#-key-features--role-based-workflows)
 - [Software Architecture & Design Patterns](#-software-architecture--design-patterns)
 - [Technology Stack](#-technology-stack)
+- [Development Methodology (Agile/Scrum)](#-development-methodology-agilescrum)
 - [Getting Started & Local Setup](#-getting-started--local-setup)
 - [Team Members & Individual Contributions](#-team-members--individual-contributions)
-
 
 ---
 
@@ -84,7 +84,7 @@ The project follows a clean **Model-View-Controller (MVC)** architecture layered
                                         ▼
                           ┌──────────────────────────┐
                           │    MS SQL Server DB      │
-                          └──────────────────────────┘
+                          └─────────────┬────────────┘
 ```
 
 ### 1. 🔔 Observer Pattern (Notification System)
@@ -126,7 +126,16 @@ The project follows a clean **Model-View-Controller (MVC)** architecture layered
 
 ---
 
+## 🔄 Development Methodology (Agile/Scrum)
 
+The project was executed following the **Agile (Scrum)** framework across a 12-week timeline divided into 2-week Sprints:
+
+* **Sprint 1 (Weeks 1-3):** Foundation & Security — Project setup, JPA entities, database configuration, and BCrypt security.
+* **Sprint 2 (Weeks 4-6):** Core Ticketing Lifecycle — Ticket submission, file attachments, and Help Desk manual routing.
+* **Sprint 3 (Weeks 7-9):** Resolution & Knowledge Base — Threaded Q&A responses, public self-service KB, Strategy & Factory pattern implementation.
+* **Sprint 4 (Weeks 10-12):** Advanced & Confidential Modules — Real-time Observer notifications, AES-encrypted counseling module, and end-to-end testing.
+
+---
 
 ## 🚀 Getting Started & Local Setup
 
@@ -180,7 +189,6 @@ Make sure you have the following installed on your local development machine:
 
 ---
 
-
 ## 👥 Team Members & Individual Contributions
 
 **Group ID:** `2025-Y2-S1-KU-40`  
@@ -193,8 +201,3 @@ Make sure you have the following installed on your local development machine:
 | **IT24102944** | **Dasanayake U. R. N. P. K.** | **Lecturer Module:** Lecturer dashboard, academic ticket management, linking responses to academic course modules. |
 | **IT24102876** | **Nawarathna I. G. D. S.** | **Counselor Module:** Confidential & Anonymous Counseling module, auto-assignment bypass logic, secure anonymous dashboard. |
 | **IT24104181** | **Alahakoon A. M. D. S.** | **Admin & System Core:** System Architecture, Spring Security setup, User Management CRUD, Observer, Strategy & Factory pattern implementation. |
-
----
-
-
-
