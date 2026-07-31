@@ -17,7 +17,6 @@ Developed as part of the **SE2030 - Software Engineering** module (Year 2 Semest
 - [Key Features & Role-Based Workflows](#-key-features--role-based-workflows)
 - [Software Architecture & Design Patterns](#-software-architecture--design-patterns)
 - [Technology Stack](#-technology-stack)
-- [Development Methodology (Agile/Scrum)](#-development-methodology-agilescrum)
 - [Getting Started & Local Setup](#-getting-started--local-setup)
 - [Team Members & Individual Contributions](#-team-members--individual-contributions)
 
@@ -123,17 +122,6 @@ The project follows a clean **Model-View-Controller (MVC)** architecture layered
 * **Database Management System:** Microsoft SQL Server
 * **Build Automation:** Apache Maven (`pom.xml`)
 * **Version Control:** Git & GitHub
-
----
-
-## 🔄 Development Methodology (Agile/Scrum)
-
-The project was executed following the **Agile (Scrum)** framework across a 12-week timeline divided into 2-week Sprints:
-
-* **Sprint 1 (Weeks 1-3):** Foundation & Security — Project setup, JPA entities, database configuration, and BCrypt security.
-* **Sprint 2 (Weeks 4-6):** Core Ticketing Lifecycle — Ticket submission, file attachments, and Help Desk manual routing.
-* **Sprint 3 (Weeks 7-9):** Resolution & Knowledge Base — Threaded Q&A responses, public self-service KB, Strategy & Factory pattern implementation.
-* **Sprint 4 (Weeks 10-12):** Advanced & Confidential Modules — Real-time Observer notifications, AES-encrypted counseling module, and end-to-end testing.
 
 ---
 
